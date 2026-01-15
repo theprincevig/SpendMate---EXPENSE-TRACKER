@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import "tailwindcss";
+
+
+@theme {
+    --font-display: "Poppins", "sans-serif";
+    --breakpoint-3xl: 1920px;
+    --color-primary: #875cf5;
+}
+
+@layer base {
+    html {
+        font-family: var(--font-display);
+    }
+
+    body {
+        background: #fcfbfc;
+        overflow-x: hidden;
+    }
+}
+
+@layer utilities {
+    .SansFlex {
+        font-family: "Google Sans Flex", sans-serif;
+    }
+}
+
+.input-box {
+    @apply w-full flex justify-between gap-3 text-sm text-black bg-slate-100 rounded-full px-4 py-3 mb-4 mt-3 border border-slate-200 outline-none;
+}
+
+.btn-success {
+    @apply w-full text-sm font-medium text-white bg-emerald-500 shadow-lg shadow-emerald-600/5 p-2 rounded-lg my-1 hover:bg-emerald-600/15 hover:text-green-700 disabled:bg-gray-400 cursor-pointer transition-all
+}
+
+.btn-cancel {
+    @apply w-full flex items-center justify-center gap-1 text-sm font-medium text-white bg-gray-500 shadow-lg shadow-gray-600/5 p-2 rounded-lg my-1 hover:bg-gray-600/15 hover:text-gray-700 disabled:bg-gray-400 cursor-pointer transition-all
+}
+
+.img-upload {
+    @apply w-8 h-8 flex items-center justify-center bg-green-600 text-white rounded-full absolute -bottom-1 -right-1 cursor-pointer hover:scale-90 transition-all duration-100
+}
+
+.img-remove {
+    @apply w-8 h-8 flex items-center justify-center bg-red-600 text-white rounded-full absolute -bottom-1 -right-1 cursor-pointer hover:scale-90 transition-all duration-100
+}
+
+.card {
+    @apply bg-white p-6 rounded-2xl shadow-md shadow-gray-100 border border-gray-200/50;
+}
+
+.card-btn {
+    @apply flex items-center gap-3 text-xs font-medium font-[Comfortaa] text-gray-700 hover:text-green-500 bg-gray-50 hover:bg-emerald-50 px-4 py-1.5 rounded-lg border border-gray-200/50 transition-all cursor-pointer;
+}
+
+.add-btn {
+    @apply flex items-center gap-1.5 text-xs md:text-sm font-medium font-[Comfortaa] text-green-600 whitespace-nowrap bg-emerald-50 border border-green-100 rounded-xl px-4 py-2 cursor-pointer;
+}
+
+.add-btn-fill {
+    @apply text-white bg-green-500;
+}
+
+/* -------------------------------------------------- */
+/* ⚡ Shimmer Effect (Loading Placeholder)            */
+/* -------------------------------------------------- */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: #ffffff;    /* light */
+}
+
+.dark .shimmer {
+  background-color: #1f2937; /* dark */
+}
+
+.shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.03),
+    rgba(0, 0, 0, 0.06),
+    rgba(0, 0, 0, 0.03)
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .shimmer::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* AI Chatbox styling */
+/* .input-bg {
+  background: linear-gradient(to top right, #1cb484, #ffffff);
+} */
+
+.AI_chat-input {
+  @apply w-full font-medium outline-none text-sm px-6 py-3 rounded-full shadow-md inset-shadow-sm active:scale-99 transition-all duration-100;
+}
+
+.AI_chat-input:placeholder-shown {
+  @apply text-sm font-[Comfortaa] font-medium;
+}
+
+.AI_send-btn {
+  @apply flex items-center justify-center bg-emerald-400 hover:bg-emerald-500 text-white p-2 rounded-full shadow-md hover:scale-108 active:scale-99 transition-all duration-150 cursor-pointer;
+}
+
+.AI_quick-btns {
+  @apply bg-emerald-50 text-green-500 hover:bg-emerald-500 hover:text-white rounded-full shadow-md text-xs px-4 py-2 whitespace-nowrap hover:scale-105 transition-all duration-200 cursor-pointer disabled:opacity-50;
+}
+
+/* Hide scrollbar but allow scroll */
+.x-scrollbar {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+
+  touch-action: pan-x;
+}
+
+.x-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.x-scrollbar > * {
+  scroll-snap-align: start;
+}
+
+/* AI floating button for chatbox MODAL */
+.AI_floating-btn {
+  @apply w-10 h-10 hover:w-40 flex items-center bg-emerald-50 text-green-600 rounded-full shadow-md transition-all duration-300 ease-out overflow-hidden cursor-pointer;
+}
+
+/* AI animations */
+.AI_glow-spin {
+  animation: glow-spin 0.8s ease-in-out;
+}
+
+.AI_smart-bounce {
+  animation: smart-bounce 0.9s ease-in-out;
+}
+
+.AI_glow {
+  animation: ai-glow 2.8s ease-in-out infinite;
+}
+
+@keyframes glow-spin {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+  }
+
+  100% {
+    transform: rotate(-360deg);
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes smart-bounce {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(-6px); }
+  60%  { transform: translateY(3px); }
+  100% { transform: translateY(0); }
+}
+
+/* AI floating button glow */
+@keyframes ai-glow {
+  0% {
+    box-shadow:
+      0 0 0 rgba(16, 185, 129, 0),
+      0 0 0 rgba(16, 185, 129, 0);
+  }
+
+  50% {
+    box-shadow:
+      0 0 18px rgba(16, 185, 129, 0.45),
+      0 0 36px rgba(16, 185, 129, 0.25);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 rgba(16, 185, 129, 0),
+      0 0 0 rgba(16, 185, 129, 0);
+  }
+}
