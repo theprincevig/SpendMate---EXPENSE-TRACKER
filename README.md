@@ -20,11 +20,11 @@
 
 ## Tech Stack
 
-- **Frontend**: [React](https://reactjs.org/), [Vite](https://vitejs.dev/)
-- **Backend**: [Express.js](https://expressjs.com/), [MongoDB](https://www.mongodb.com/)
-- **Authentication**: [JWT](https://jwt.io/)
-- **AI Integration**: [OpenAI API](https://openai.com/)
-- **Cloud Storage**: [Cloudinary](https://cloudinary.com/)
+- **Frontend**: ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB), ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+- **Backend**: ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB), ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+- **Authentication**: ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=jsonwebtokens)
+- **AI Integration**: ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
+- **Cloud Storage**: ![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
 
 ---
 
@@ -53,14 +53,7 @@
 
 ## Quickstart
 
-1. Clone the repo
-
-   ```bash
-   git clone <repo-url>
-   cd "SpendMate - EXPENSE TRACKER"
-   ```
-
-2. Backend
+1. Backend
 
    ```bash
    cd backend
@@ -71,7 +64,7 @@
    npm start              # start server
    ```
 
-3. Frontend
+2. Frontend
 
    ```bash
    cd frontend
