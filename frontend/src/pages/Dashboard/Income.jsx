@@ -3,7 +3,7 @@ import { useIncomeStore } from "../../store/useIncomeStore";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
 import IncomeOverview from "../../components/income/IncomeOverview";
 import Modal from "../../components/Modal";
-import AddIncomeForm from "../../components/income/addIncomeForm";
+import AddIncomeForm from "../../components/income/AddIncomeForm";
 import toast from 'react-hot-toast';
 import IncomeList from "../../components/income/IncomeList";
 import DeleteAlert from "../../components/DeleteAlert";
