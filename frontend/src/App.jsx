@@ -30,7 +30,7 @@ function App() {
       <div>
         <Router>
           <Routes>
-            <Route path='/' element={<Root />} />
+            <Route index element={<Root />} />
             <Route path='/login' element={<Login />} />
             <Route path='/signup' element={<Signup />} />
 
