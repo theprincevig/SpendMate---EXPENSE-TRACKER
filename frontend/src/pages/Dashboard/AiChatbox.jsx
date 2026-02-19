@@ -11,16 +11,24 @@ export default function AiChatbox() {
         initialLoading,
         aiTyping,
         activeChatId,
-        newChat
+        newChat,
+        loadChatSession
     } = useAiChatStore();
+
+    console.log(initialLoading);
 
     const [input, setInput] = useState("");
 
     useEffect(() => {
-        // If no chat is active, start a new one
-        if (!activeChatId) {
-            newChat();
-        }
+        const init = async () => {
+            await loadChatSession();
+
+            if (!activeChatId) {
+                newChat();
+            }
+        };
+
+        init();
     }, [activeChatId, newChat]);
 
     function handleSend() {
