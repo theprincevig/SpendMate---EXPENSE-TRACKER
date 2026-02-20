@@ -24,7 +24,7 @@ export default function SideMenu({ activeMenu }) {
                     <img 
                         src={authUser?.profilePic || ""} 
                         alt="Profile photo" 
-                        className="size-20 bg-slate-400 rounded-full"
+                        className="w-18 h-18 bg-slate-400 rounded-full object-cover"
                     />
                 ) : (
                     <CharAvatar

@@ -21,6 +21,7 @@ export default function UpdateProfile() {
     const [profileData, setProfileData] = useState(emptyProfile);
     const [profilePic, setProfilePic] = useState(null);
     const [preview, setPreview] = useState("");
+    const [isImageRemoved, setIsImageRemoved] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -33,6 +34,10 @@ export default function UpdateProfile() {
                 : "",
             currency: authUser.currencyDetails?.code || "INR",
         });
+
+        if (authUser.profilePic) {
+            setPreview(authUser.profilePic);
+        }
     }, [authUser]);
     
     useEffect(() => {
@@ -49,17 +54,26 @@ export default function UpdateProfile() {
         
         setProfilePic(file);
         setPreview(URL.createObjectURL(file));
+        setIsImageRemoved(false);
     }
     
     function handleRemoveImage() {
         setPreview("");
         setProfilePic(null);
+        setIsImageRemoved(true);
         toast.success("Profile picture will be removed successfully!");
     }
 
     async function handleSave() {
         try {
-            const profilePicToSend = preview === "" ? "" : profilePic;
+            let profilePicToSend = undefined;
+
+            if (isImageRemoved) {
+                profilePicToSend = "";
+            } else if (profilePic) {
+                profilePicToSend = profilePic;
+            }
+            
             await updateProfile({ ...profileData, profilePic: profilePicToSend });
             navigate("/profile");
             toast.success("Profile updated successfully!");
@@ -77,7 +91,6 @@ export default function UpdateProfile() {
                     <UpdateProfileSkeleton />
                 ) : (
                     <div className="bg-white p-6 shadow-md flex flex-col gap-6 items-center">
-                        
                         <div className="relative">
                             {preview ? (
                                 <img
@@ -93,7 +106,16 @@ export default function UpdateProfile() {
                                 />
                             )}
                             
-                            {preview === "" ? (
+                            {preview ? (
+                                <button 
+                                    type="button"
+                                    onClick={handleRemoveImage}
+                                    className="absolute bottom-0 right-0 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 hover:scale-110 transition-all cursor-pointer"
+                                    disabled={isUpdatingProfile}
+                                >
+                                    <Trash2 size={16} />
+                                </button>
+                            ) : (
                                 <label 
                                     htmlFor="avatar-upload"
                                     className={`
@@ -112,15 +134,6 @@ export default function UpdateProfile() {
                                         disabled={isUpdatingProfile} 
                                     />
                                 </label>
-                            ) : (
-                                <button 
-                                    type="button"
-                                    onClick={handleRemoveImage}
-                                    className="absolute bottom-0 right-0 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 hover:scale-110 transition-all cursor-pointer"
-                                    disabled={isUpdatingProfile}
-                                >
-                                    <Trash2 size={16} />
-                                </button>
                             )}
                         </div>
 

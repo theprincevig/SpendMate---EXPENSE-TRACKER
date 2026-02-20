@@ -31,11 +31,19 @@ export default function ViewProfile() {
                     <>
                         <div className="bg-white p-6 border-b border-gray-200/80 shadow-md flex gap-6 items-center justify-between">
                             {authUser?.profilePic ? (
-                                <img 
-                                    src={authUser.profilePic} 
-                                    alt="profilePic" 
-                                    className="w-24 h-24 rounded-full object-cover"
-                                />
+                                <div className="relative">
+                                    <img 
+                                        src={authUser.profilePic} 
+                                        alt="profilePic" 
+                                        className="w-24 h-24 rounded-full object-cover"
+                                    />
+                                    <button 
+                                        onClick={() => navigate("/profile/edit")}
+                                        className="absolute bottom-0 right-0 bg-emerald-400 text-white p-2 rounded-full hover:bg-emerald-500 hover:scale-110 transition-all cursor-pointer"
+                                    >
+                                        <Pencil size={14} />
+                                    </button>
+                                </div>
                             ) : (
                                 <div className="relative w-24 h-24 rounded-full bg-emerald-50 flex items-center justify-center">
                                     <User size={35} className="text-green-500" />

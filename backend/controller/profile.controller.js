@@ -1,18 +1,83 @@
+// =======================
+// Imports
+// =======================
 const User = require('../models/user');
 const { cloudinary } = require("../config/cloud.Config.js");
+const mongoose = require("mongoose");
 const currencyConfig = require('../config/currency.Config.js');
+
+// =======================
+// Helpers
+// =======================
+const SAFE_FIELDS = "fullName email profilePic dob currency";
+
+const deleteFromCloudinary = async (imageUrl) => {
+  if (!imageUrl || !imageUrl.includes("res.cloudinary.com")) return;
+
+  try {
+    const publicId = imageUrl.split("/").slice(-2).join("/").split(".")[0];
+
+    await cloudinary.uploader.destroy(publicId);
+  } catch (error) {
+    console.warn("Cloudinary delete failed:", error.message);
+  }
+};
+
+const applyProfileUpdates = async (user, req) => {
+  const { fullName, email, dob, profilePic, currency } = req.body;
+
+  if (fullName !== undefined) user.fullName = fullName;
+  if (dob !== undefined) user.dob = dob;
+
+  if (email !== undefined && email !== user.email) {
+    const existingUser = await User.findOne({
+      email: email.toLowerCase(),
+      _id: { $ne: user._id }  // Exclude current user
+    });
+
+    if (existingUser) throw new Error("Email has been already taken");
+
+    user.email = email.toLowerCase();
+  }
+
+  // ---- Currency update ----
+  if (currency !== undefined) {
+    if (currencyConfig[currency]) {
+        user.currency = currency;   // set {code, symbol}
+    }
+  }
+
+  // Reset to default avatar
+  if (profilePic === "/images/avatar.png") {
+    await deleteFromCloudinary(user.profilePic);
+    user.profilePic = "/images/avatar.png";
+  }
+
+  // New image uploaded
+  if (req.file) {
+    await deleteFromCloudinary(user.profilePic);
+    user.profilePic = req.file.path;
+  }
+};
 
 module.exports.viewProfile = async (req, res) => {
     try {
         const userId = req.user._id;
-        const user = await User.findById(userId)
-            .select("fullName, email, profilePic, dob, currency");
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({
+            success: false,
+            error: "Invalid user id",
+            });
+        }
+
+        const user = await User.findById(userId).select(SAFE_FIELDS);
         
         if (!user) return res.status(404).json({ success: false, message: "User not found." });
 
         return res.status(200).json({ success: true, user });
     } catch (error) {
-        console.error("Show profile error:", error);
+        console.error("View profile error:", error);
         return res.status(500).json({
             success: false,
             message: error.message
@@ -27,11 +92,19 @@ module.exports.updateProfile = async (req, res) => {
 
         if (!user) return res.status(404).json({ success: false, message: "User not found." });
 
-        await updateUserFields(user, req);
+        await applyProfileUpdates(user, req);
         await user.save();
 
-        return res.status(200).json({ success: true, user });
+        const updatedUser = await User.findById(userId).select(SAFE_FIELDS);
+
+        return res.status(200).json({ success: true, user: updatedUser });
     } catch (error) {
+        if (error.message === "Email already taken") {
+            return res.status(400).json({
+                success: false,
+                error: error.message
+            });
+        }
         console.error("Update profile error:", error);
         return res.status(500).json({
             success: false,
@@ -39,55 +112,3 @@ module.exports.updateProfile = async (req, res) => {
         });
     }
 };
-
-// --------------------
-// Helper function to update fields & cloudinary cleanup
-// --------------------
-async function updateUserFields(user, req) {
-    const { fullName, email, dob, profilePic, currency } = req.body;  // ← Destructure body fields
-
-    if (fullName !== undefined) user.fullName = fullName;   // ← Update fullName if provided
-    if (email !== undefined) user.email = email;    // ← Update email if provided
-    if (dob !== undefined) user.dob = new Date(dob);  // ← Update dob if provided
-
-    // ---- Currency update ----
-    if (currency !== undefined) {
-        if (currencyConfig[currency]) {
-            user.currency = currency;   // set {code, symbol}
-        }
-    }
-
-    // --------------------
-    // Remove profilePic if explicitly set to default
-    // --------------------
-    if (profilePic === "") {  // ← If request explicitly sets default avatar
-        if (user.profilePic && user.profilePic.includes("res.cloudinary.com")) {    // ← If current pic is from Cloudinary
-            try {
-                const segments = user.profilePic.split("/");    // ← Split URL into path segments
-                const publicIdWithExt = segments[segments.length - 1];  // ← Get filename with extension (e.g., abc.jpg)
-                const publicId = `spendMate-cloudinary/${publicIdWithExt.split(".")[0]}`;   // ← Build Cloudinary public ID
-                await cloudinary.uploader.destroy(publicId);    // ← Delete old image from Cloudinary
-            } catch (error) {
-                console.warn("Cloudinary deletion warning:", err.message);  // ⚠️ Would warn about delete failure
-            }
-        }
-        user.profilePic = ""; // ← Reset to default avatar
-    }
-
-    // --------------------
-    // Replace old profile pic if new one is uploaded
-    // --------------------
-    if (req.file) { // ← If a new file was uploaded in the request
-        if (user.profilePic && user.profilePic.includes("res.cloudinary.com")) {    // ← If there is an old Cloudinary pic
-            try {
-                const segments = user.profilePic.split("/");    // ← Split URL to get filename
-                const publicIdWithExt = segments[segments.length - 1];  // ← Extract filename.ext
-                const publicId = `spendMate-cloudinary/${publicIdWithExt.split(".")[0]}`;   // ← Construct public ID
-                await cloudinary.uploader.destroy(publicId);    // ← Delete old image from Cloudinary
-            } catch (error) {
-                console.warn("Cloudinary deletion warning:", err.message);  // ⚠️ Would warn about delete failure
-            }
-        }
-        user.profilePic = ""; // ← Reset to default avatar
-    }
-}
