@@ -43,9 +43,11 @@ export default function Income() {
         // Validation checks
         if (!incomeFormData.source.trim()) return toast.error("Source is required.");
 
-        if (!incomeFormData.amount || isNaN(incomeFormData.amount) || Number(incomeFormData.amount) <= 0) {
-            toast.error("Amount should be a valid number greater than 0.");
-            return;
+        if (!incomeFormData.amount 
+            || isNaN(incomeFormData.amount) 
+            || Number(incomeFormData.amount) <= 0
+        ) {
+            return toast.error("Amount should be a valid number greater than 0.");
         }
 
         if (!incomeFormData.date) return toast.error("Date is required.");

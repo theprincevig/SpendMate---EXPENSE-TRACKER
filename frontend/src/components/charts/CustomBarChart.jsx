@@ -8,10 +8,13 @@ import {
     Cell,
     ResponsiveContainer
 } from 'recharts';
-import { formatAmount } from '../../lib/helper';
+import { useExchangeRateStore } from '../../store/useExchangeRateStore';
+import { formatPrice } from '../../utils/formatPrice';
 
 export default function CustomBarChart({ data, currency }) {
     if (!currency) return null;
+
+    const { rates, isFetchingRates } = useExchangeRateStore();
 
     // Function to alternate colors
     function getBarColor(index) {
@@ -29,7 +32,17 @@ export default function CustomBarChart({ data, currency }) {
                 <p className="text-sm text-gray-600">
                     Amount:{" "}
                     <span className="text-sm font-medium text-gray-900">
-                        {formatAmount(amount, currency)}
+                        {isFetchingRates && currency !== "INR" ? (
+                            <span className=" w-40 h-3 shimmer inline-block" />
+                        ) : (
+                            <>
+                                {formatPrice({
+                                    amount,
+                                    currency,
+                                    rates
+                                })}
+                            </>
+                        )}
                     </span>
                 </p>
             </div>
@@ -46,7 +59,7 @@ export default function CustomBarChart({ data, currency }) {
                     <YAxis 
                         tick={{ fontSize: 12, fill: "#555" }} 
                         stroke='none' 
-                        tickFormatter={(value) => formatAmount(value, currency)}
+                        tickFormatter={(value) => formatPrice(value, currency, rates)}
                     />
 
                     <Tooltip content={CustomTooltip} />

@@ -2,49 +2,45 @@ import AuthLayout from "../../components/layouts/AuthLayout";
 import Input from "../../components/inputs/Input";
 import PasswordStrengthMeter from "../../components/inputs/PasswordStrengthMeter";
 import { Link, useNavigate } from 'react-router-dom';
-import { validateEmail, validatePassword } from "../../lib/helper";
 import { useState } from "react";
 import { KeyRound, Loader, Mail } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
+import { hasErrors, validateSignup } from "../../errors/error";
+import toast from "react-hot-toast";
 
 export default function Signup() {
     const data = { email: "", password: "" };
 
+    const { isSigningUp, signup } = useAuthStore();
+
     const [formData, setFormData] = useState(data);
-    const [error, setError] = useState(null);
+    const [errors, setErrors] = useState(data);
     const navigate = useNavigate();
 
-    const { isSigningUp, signup } = useAuthStore();
+    const handleChange = (field) => (e) => {
+        setFormData(prev => ({ ...prev, [field]: e.target.value }));
+        setErrors(prev => ({ ...prev, [field]: "" }));
+    };
 
     async function handleSubmit(e) {
         e.preventDefault();
 
-        if (!validateEmail(formData.email)) {
-            setError("Please enter a valid email address.");
-            return;
-        }
+        if (isSigningUp) return;
 
-        if (!validatePassword(formData.password)) {
-            setError("Please enter a strong/unique password.");
-            return;
-        }
-
-        setError("");
+        const newErrors = validateSignup(formData);
+        if (hasErrors(newErrors)) return setErrors(newErrors);
 
         try {
             await signup(formData);
             setFormData(data);
             navigate("/dashboard");
+            toast.success("Welcome to Spendmate!");
 
         } catch (error) {
-            if (error.response && error.response.data.message) {
-                setError(error.response.data.message);
-
-            } else {
-                setError("Something went wrong! Please try again.");
-            }
+            console.error(error.error);
+            toast.error(error.error || "Failed to sign up.");
         }
-    }
+    };
 
     return (
         <AuthLayout>
@@ -58,20 +54,23 @@ export default function Signup() {
                     <Input 
                         icon={<Mail size={18} />}
                         type="text"
-                        value={formData.email}
                         label="Email"
+                        value={formData.email}
                         placeholder="mail@site.com"
-                        onChange={({ target }) => setFormData({ ...formData, email: target.value })}
+                        onChange={handleChange("email")}
+                        error={errors.email}
                     />
 
                     <Input 
                         icon={<KeyRound size={18} />}
                         type="password"
-                        value={formData.password}
                         label="Password"
+                        value={formData.password}
                         placeholder="Enter password"
-                        onChange={({ target }) => setFormData({ ...formData, password: target.value })}
+                        onChange={handleChange("password")}
+                        error={errors.password}
                     />
+
                     {/* Password Strength Meter - Only show if password is not empty */}
                     <div
                         className={`overflow-hidden transition-all duration-300 ease-in-out`}
@@ -88,8 +87,6 @@ export default function Signup() {
                             <PasswordStrengthMeter password={formData.password} />
                         </div>
                     </div>
-
-                    {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
                     <button 
                         type="submit"

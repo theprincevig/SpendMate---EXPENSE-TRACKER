@@ -48,9 +48,12 @@ export default function Expense() {
         // Validation checks
         if (!expenseFormData.category.trim()) return toast.error("Category is required.");
 
-        if (!expenseFormData.amount || isNaN(expenseFormData.amount) || Number(expenseFormData.amount) <= 0) {
-            toast.error("Amount should be a valid number greater than 0.");
-            return;
+        if (
+            !expenseFormData.amount || 
+            isNaN(expenseFormData.amount) || 
+            Number(expenseFormData.amount) <= 0
+        ) {
+            return toast.error("Amount should be a valid number greater than 0.");
         }
 
         if (!expenseFormData.date) return toast.error("Date is required.");

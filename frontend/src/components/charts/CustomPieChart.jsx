@@ -8,9 +8,20 @@ import {
 } from 'recharts';
 import CustomToolTip from './CustomToolTip';
 import CustomLegend from './CustomLegend';
-import { formatAmount } from '../../lib/helper';
 
-export default function CustomPieChart({ data, label, totalAmount, currency, colors, showTextAnchor }) {
+import { useExchangeRateStore } from '../../store/useExchangeRateStore';
+import { formatPrice } from '../../utils/formatPrice';
+
+export default function CustomPieChart({
+    data,
+    label,
+    totalAmount,
+    currency,
+    colors,
+    showTextAnchor
+}) {
+    const { rates, isFetchingRates } = useExchangeRateStore();
+
     return (
         <ResponsiveContainer width="100%" height={380}>
             <PieChart>
@@ -59,7 +70,17 @@ export default function CustomPieChart({ data, label, totalAmount, currency, col
                             fontSize='24px'
                             fontWeight='semi-bold'
                         >
-                            {formatAmount(totalAmount, currency)}
+                            {isFetchingRates && currency !== "INR" ? (
+                                <span className=" w-40 h-3 shimmer inline-block" />
+                            ) : (
+                                <>
+                                    {formatPrice({
+                                        amount: totalAmount,
+                                        currency,
+                                        rates
+                                    })}
+                                </>
+                            )}
                         </text>
                     </>
                 )}

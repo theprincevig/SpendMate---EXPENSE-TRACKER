@@ -1,34 +1,37 @@
 export const API_PATHS = {
     AUTH: {
-        CHECK_AUTH: "/api/auth/me",
+        CHECK_AUTH: "/api/auth/session",
         REGISTER: "/api/auth/register",
         LOGIN: "/api/auth/login",
         LOGOUT: "/api/auth/logout",
-        GET_USER_INFO: "/api/auth/getUser",
         CHANGE_PASSWORD: "/api/auth/change-password"
     },
     DASHBOARD: {
-        GET_DATA: "/dashboard"
+        GET_DATA: "/api/dashboard"
     },
     PROFILE: {
-        ME: "/profile/me"
+        ME: "/api/profile/me",
+        CHANGE_CURRENCY: "/api/profile/me/currency",
     },
     INCOME: {
-        ADD_INCOME: "/income/add",
-        GET_ALL_INCOME: "/income/get",
-        DELETE_INCOME: (id) => `/income/delete/${id}`,
-        DOWNLOAD_INCOME_PDF: "/income/pdf"
+        ADD_INCOME: "/api/income/add",
+        GET_ALL_INCOME: "/api/income/get",
+        DELETE_INCOME: (id) => `/api/income/delete/${id}`,
+        DOWNLOAD_INCOME_PDF: "/api/income/pdf"
     },
     EXPENSE: {
-        ADD_EXPENSE: "/expense/add",
-        GET_ALL_EXPENSE: "/expense/get",
-        DELETE_EXPENSE: (id) => `/expense/delete/${id}`,
-        DOWNLOAD_EXPENSE_PDF: "/expense/pdf"
+        ADD_EXPENSE: "/api/expense/add",
+        GET_ALL_EXPENSE: "/api/expense/get",
+        DELETE_EXPENSE: (id) => `/api/expense/delete/${id}`,
+        DOWNLOAD_EXPENSE_PDF: "/api/expense/pdf"
     },
     AI: {
-        CHAT: "/ai/chat",
-        CHAT_HISTORY: "/ai/history",
-        GET_CHAT_MESSAGES: (chatId) => `/ai/chat/${chatId}`,
-        DELETE_CHAT_HISTORY: (chatId) => `/ai/chat/delete/${chatId}`
+        CHAT: "/api/ai/chat",
+        CHAT_HISTORY: "/api/ai/history",
+        GET_CHAT_MESSAGES: (chatId) => `/api/ai/chat/${chatId}`,
+        DELETE_CHAT_HISTORY: (chatId) => `/api/ai/chat/delete/${chatId}`
+    },
+    RATES: {
+        EXCHANGE: "/api/exchange-rates"
     }
 }

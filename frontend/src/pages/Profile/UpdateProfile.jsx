@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 import { ArrowLeft, Camera, Loader, Trash2 } from "lucide-react";
 import Input from "../../components/inputs/Input";
 import CharAvatar from "../../components/cards/CharAvatar";
-import { currencyConfig } from "../../config/currency.Config";
 import UpdateProfileSkeleton from "../../components/skeletons/UpdateProfileSkeleton";
 
 export default function UpdateProfile() {
@@ -14,8 +13,7 @@ export default function UpdateProfile() {
 
     const emptyProfile = {
         fullName: "",
-        dob: "",
-        currency: ""
+        dob: ""
     }
 
     const [profileData, setProfileData] = useState(emptyProfile);
@@ -32,7 +30,6 @@ export default function UpdateProfile() {
             dob: authUser.dob
                 ? new Date(authUser.dob).toISOString().split("T")[0]
                 : "",
-            currency: authUser.currencyDetails?.code || "INR",
         });
 
         if (authUser.profilePic) {
@@ -47,6 +44,11 @@ export default function UpdateProfile() {
             }
         };
     }, [preview]);
+
+    const handleChange = (field) => (e) => {
+        setFormData(prev => ({ ...prev, [field]: e.target.value }));
+        setErrors(prev => ({ ...prev, [field]: "" }));
+    };
     
     async function handleImageUpload(e) {
         const file = e.target.files[0];
@@ -140,38 +142,21 @@ export default function UpdateProfile() {
                         <div className="w-full space-y-4">
                             <Input 
                                 type="text"
-                                placeholder="Add your name"
-                                value={profileData.fullName}
                                 label="Full Name"
-                                onChange={(e) => setProfileData({ ...profileData, fullName: e.target.value })}
+                                value={profileData.fullName}
+                                placeholder="Add your name"
+                                onChange={handleChange("fullName")}
                                 disabled={isUpdatingProfile}
                             />
 
                             <Input 
                                 type="date"
-                                placeholder="Add your dob"
-                                value={profileData.dob}
                                 label="Date of Birth"
-                                onChange={(e) => setProfileData({ ...profileData, dob: e.target.value })}
+                                value={profileData.dob}
+                                placeholder="Add your dob"
+                                onChange={handleChange("dob")}
                                 disabled={isUpdatingProfile}
                             />
-                            
-                            <label className="text-sm text-slate-800">Currency</label>
-                            <select 
-                                value={profileData.currency}
-                                onChange={(e) => setProfileData({ ...profileData, currency: e.target.value })}
-                                className="input-box"
-                                disabled={isUpdatingProfile}
-                            >
-                                {Object.values(currencyConfig).map((currency) => (
-                                    <option 
-                                        key={currency.code} 
-                                        value={currency.code}
-                                    >
-                                        {currency.symbol} {currency.code}
-                                    </option>
-                                ))}
-                            </select>
                         </div>
 
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-2">

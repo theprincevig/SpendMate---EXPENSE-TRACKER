@@ -1,48 +1,44 @@
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
-import { validateEmail } from "../../lib/helper";
 import { KeyRound, Loader, Mail } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import Input from "../../components/inputs/Input";
+import { hasErrors, validateLogin } from "../../errors/error";
+import toast from "react-hot-toast";
 
 export default function Login() {
     const data = { email: "", password: "" };
+    
+    const { isLoggingIn, login } = useAuthStore();
 
     const [formData, setFormData] = useState(data);
-    const [error, setError] = useState(null);
+    const [errors, setErrors] = useState(data);
     const navigate = useNavigate();
 
-    const { isLoggingIn, login } = useAuthStore();
+    const handleChange = (field) => (e) => {
+        setFormData(prev => ({ ...prev, [field]: e.target.value }));
+        setErrors(prev => ({ ...prev, [field]: "" }));
+    };
 
     // Handle login form submit
     async function handleSubmit(e) {
         e.preventDefault();
 
-        if (!validateEmail(formData.email)) {
-            setError("Please enter a valid email.");
-            return;
-        }
+        if (isLoggingIn) return;
 
-        if (!formData.password) {
-            setError("please enter your password");
-            return;
-        }
-
-        setError("");
+        const newErrors = validateLogin(formData);
+        if (hasErrors(newErrors)) return setErrors(newErrors);
 
         try {
             await login(formData);
             setFormData(data);
             navigate("/dashboard");
+            toast.success("Welcome back to the spendmate!");
 
         } catch (error) {
-            if (error.response && error.response.data.message) {
-                setError(error.response.data.message);
-
-            } else {
-                setError("Something went wrong! Please try again.");
-            }
+            console.error(error.error);
+            toast.error(error.error || "Failed to login");
         }
     }
 
@@ -58,22 +54,22 @@ export default function Login() {
                     <Input 
                         icon={<Mail size={18} />}
                         type="text"
-                        value={formData.email}
                         label="Email"
+                        value={formData.email}
                         placeholder="mail@site.com"
-                        onChange={({ target }) => setFormData({ ...formData, email: target.value })}
+                        onChange={handleChange("email")}
+                        error={errors.email}
                     />
 
                     <Input 
                         icon={<KeyRound size={18} />}
                         type="password"
-                        value={formData.password}
                         label="Password"
+                        value={formData.password}
                         placeholder="Enter password"
-                        onChange={({ target }) => setFormData({ ...formData, password: target.value })}
+                        onChange={handleChange("password")}
+                        error={errors.password}
                     />
-
-                    {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
                     <button 
                         type="submit"

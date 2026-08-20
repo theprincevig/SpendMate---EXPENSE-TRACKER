@@ -15,8 +15,6 @@ export default function AiChatbox() {
         loadChatSession
     } = useAiChatStore();
 
-    console.log(initialLoading);
-
     const [input, setInput] = useState("");
 
     useEffect(() => {

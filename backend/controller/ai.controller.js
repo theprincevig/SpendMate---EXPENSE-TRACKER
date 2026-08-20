@@ -1,7 +1,7 @@
 const Expense = require("../models/expense");
 const AiChat = require("../models/aiChat.js");
 const currencyConfig = require("../config/currency.Config.js");
-const { getAIResponse, getOverspendingWarning } = require("../utils/ai.service");
+const { getAIResponse, getOverspendingWarning } = require("../services/ai.service.js");
 const { analyzeOverspending } = require("../utils/overSpending.js");
 const { detectIntent } = require("../utils/intent.utils.js");
 const AiChatSession = require("../models/aiChatSession.js");

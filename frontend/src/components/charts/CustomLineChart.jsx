@@ -7,7 +7,7 @@ import {
     Tooltip,
     ResponsiveContainer
 } from 'recharts';
-import { formatAmount } from '../../lib/helper';
+
 
 export default function CustomLineChart({ data, currency }) {
     if (!currency) return null;
@@ -23,7 +23,7 @@ export default function CustomLineChart({ data, currency }) {
                 <p className="text-sm text-gray-600">
                     Amount:{" "}
                     <span className="text-sm font-medium text-gray-900">
-                        {formatAmount(amount, currency)}
+                        
                     </span>
                 </p>
             </div>

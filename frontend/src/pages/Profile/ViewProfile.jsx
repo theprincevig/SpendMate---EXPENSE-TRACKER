@@ -6,21 +6,31 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import ViewProfileSkeleton from "../../components/skeletons/ViewProfileSkeleton";
 import AdvanceSettings from "../../components/AdvanceSettings";
+import { useActiveCurrency } from "../../hooks/useActiveCurrency";
 
 export default function ViewProfile() {
-    const { authUser, getUserInfo } = useAuthStore();
+    const { authUser, viewProfile } = useAuthStore();
     const [loading, setLoading] = useState(true);
+
+    const activeCurrency = useActiveCurrency();
     const navigate = useNavigate();
 
     useEffect(() => {
-        async function fetchUser() {
-            setLoading(true);
-            await getUserInfo();
-            setLoading(false);
-        }
+        if (!authUser) return;
 
-        fetchUser();
-    }, []);
+        const fetchProfile = async () => {
+            setLoading(true);
+            try {
+                await viewProfile();
+            } catch (error) {
+                console.error(error.error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProfile();
+    }, [authUser, viewProfile]);
 
     return (
         <DashboardLayout activeMenu="Profile">
@@ -70,7 +80,7 @@ export default function ViewProfile() {
                                 </p>
 
                                 <p className="text-sm text-gray-400">
-                                    Currency: {authUser?.currencyDetails?.symbol} {authUser?.currencyDetails?.code}
+                                    Currency: {activeCurrency.details.symbol} {activeCurrency.code}
                                 </p>
                             </div>
                         </div>

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const profileController = require('../controller/profile.controller.js');
-const { protect } = require('../middleware/authMiddleware.js');
+const { protect } = require('../middleware/auth.middleware.js');
 const multer = require('multer');
 const { storage } = require('../config/cloud.Config.js');
 const upload = multer({ storage });
@@ -16,5 +16,11 @@ router.route("/me")
             upload.single("profilePic"),
             profileController.updateProfile
         );
+
+router.patch(
+    "/me/currency",
+    protect,
+    profileController.changeCurrency
+);
 
 module.exports = router;
