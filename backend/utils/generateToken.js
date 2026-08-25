@@ -5,7 +5,7 @@ module.exports.generateTokenAndCookie = (userId, res) => {
         expiresIn: "7d"
     });
 
-    console.log(!!process.env.JWT_SECRET);
+    // console.log(!!process.env.JWT_SECRET);
 
     res.cookie("jwt", token, {
         httpOnly: true,
