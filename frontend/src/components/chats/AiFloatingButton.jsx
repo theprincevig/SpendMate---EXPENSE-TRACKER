@@ -19,7 +19,7 @@ export default function AiFloatingButton({ onClick }) {
     return (
         <div
             className={`
-                absolute group bottom-10 right-10
+                absolute group bottom-10 right-10 z-1000
                 ${bounce ? "AI_smart-bounce" : ""}
             `}
             onMouseEnter={() => setHovered(true)}

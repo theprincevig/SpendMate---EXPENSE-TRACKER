@@ -21,7 +21,7 @@ export default function Navbar({ activeMenu }) {
             <h2 className="text-lg sm:text-2xl font-medium text-black">$pendMate</h2>
 
             {openSideMenu && (
-                <div className="fixed top-[61px] -ml-4 bg-white">
+                <div className="fixed top-[61px] -ml-7 bg-white">
                     <SideMenu activeMenu={activeMenu} />
                 </div>
             )}

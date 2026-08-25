@@ -13,7 +13,9 @@ export const formatPrice = ({
         rates
     });
 
-    if (!convertedAmount) return amount;
+    if (convertedAmount === null) {
+        return "-";
+    }
 
     // console.log("userCurrency:", userCurrency);
     // console.log("currencyConfig:", currencyConfig);

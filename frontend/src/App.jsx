@@ -17,13 +17,16 @@ import ViewProfile from './pages/Profile/ViewProfile';
 import UpdateProfile from './pages/Profile/UpdateProfile';
 import ChangePassword from './pages/Auth/ChangePassword';
 import AiChatbox from './pages/Dashboard/AiChatbox';
+import { useExchangeRateStore } from './store/useExchangeRateStore';
 
 
 function App() {
   const { checkAuth } = useAuthStore();
+  const { fetchRates } = useExchangeRateStore();
 
   useEffect(() => {
     checkAuth();
+    fetchRates();
   }, []);
 
   return (

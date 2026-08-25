@@ -8,16 +8,29 @@ export const convertPrice = ({
         return amount;
     }
 
-    // Convert source currency -> INR base first
-    let amountInBase = amount;
-
-    if (fromCurrency !== "INR") {
-        amountInBase = amount / rates[fromCurrency];
+    if (!rates || Object.keys(rates).length === 0) {
+        return null;
     }
 
-    // Convert INR -> target currency
-    const convertedRate = rates[toCurrency];
-    if (!convertedRate) return amount;
+    const targetRate = rates[toCurrency];
+    if (!targetRate) {
+        console.error(`Exchange rate not found for ${toCurrency}`);
+        return null;
+    }
 
-    return amountInBase * convertedRate;
+    // INR -> target
+    if (fromCurrency === "INR") {
+        return amount * targetRate;
+    }
+
+     // source -> INR
+    const sourceRate = rates[fromCurrency];
+    if (!sourceRate) {
+        console.error(`Exchange rate not found for ${fromCurrency}`);
+        return null;
+    }
+
+    const amountInINR = amount / sourceRate;
+
+    return amountInINR * targetRate;
 };
