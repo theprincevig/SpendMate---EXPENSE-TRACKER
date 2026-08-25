@@ -3,7 +3,11 @@ import { prepareIncomeBarChartData } from "../../lib/helper";
 import { Plus } from "lucide-react";
 import CustomBarChart from "../charts/CustomBarChart";
 
-export default function IncomeOverview({ currency, transactions, onAddIncome }) {
+export default function IncomeOverview({
+    currency,
+    transactions,
+    onAddIncome
+}) {
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {

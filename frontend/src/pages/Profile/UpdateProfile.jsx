@@ -7,6 +7,7 @@ import { ArrowLeft, Camera, Loader, Trash2 } from "lucide-react";
 import Input from "../../components/inputs/Input";
 import CharAvatar from "../../components/cards/CharAvatar";
 import UpdateProfileSkeleton from "../../components/skeletons/UpdateProfileSkeleton";
+import { hasErrors, validateProfile } from "../../errors/error";
 
 export default function UpdateProfile() {
     const { authUser, updateProfile, isUpdatingProfile } = useAuthStore();
@@ -17,9 +18,10 @@ export default function UpdateProfile() {
     }
 
     const [profileData, setProfileData] = useState(emptyProfile);
+    const [errors, setErrors] = useState(emptyProfile);
     const [profilePic, setProfilePic] = useState(null);
     const [preview, setPreview] = useState("");
-    const [isImageRemoved, setIsImageRemoved] = useState(false);
+    const [profilePicRemoved, setProfilePicRemoved] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -46,37 +48,44 @@ export default function UpdateProfile() {
     }, [preview]);
 
     const handleChange = (field) => (e) => {
-        setFormData(prev => ({ ...prev, [field]: e.target.value }));
+        setProfileData(prev => ({ ...prev, [field]: e.target.value }));
         setErrors(prev => ({ ...prev, [field]: "" }));
     };
     
-    async function handleImageUpload(e) {
+    async function uploadProfilePic(e) {
         const file = e.target.files[0];
         if (!file) return;
+
+        const profilePicUrl = URL.createObjectURL(file);
         
         setProfilePic(file);
-        setPreview(URL.createObjectURL(file));
-        setIsImageRemoved(false);
-    }
+        setPreview(profilePicUrl);
+        setProfilePicRemoved(false);
+    };
     
-    function handleRemoveImage() {
+    function removeProfilePic() {
         setPreview("");
         setProfilePic(null);
-        setIsImageRemoved(true);
+        setProfilePicRemoved(true);
         toast.success("Profile picture will be removed successfully!");
-    }
+    };
 
-    async function handleSave() {
+    async function handleSave(e) {
+        e.preventDefault();
+
+        const newErrors = validateProfile({...profileData, profilePic});
+        if (hasErrors(newErrors)) return setErrors(newErrors);
+
         try {
-            let profilePicToSend = undefined;
+            let profilePicSend = undefined;
 
-            if (isImageRemoved) {
-                profilePicToSend = "";
+            if (profilePicRemoved) {
+                profilePicSend = "";
             } else if (profilePic) {
-                profilePicToSend = profilePic;
+                profilePicSend = profilePic;
             }
             
-            await updateProfile({ ...profileData, profilePic: profilePicToSend });
+            await updateProfile({ ...profileData, profilePic: profilePicSend });
             navigate("/profile");
             toast.success("Profile updated successfully!");
 
@@ -84,7 +93,7 @@ export default function UpdateProfile() {
             console.log(error);
             toast.error(error.response?.data?.message || "Failed to update profile");
         }
-    }
+    };
 
     return (
         <DashboardLayout activeMenu="Profile">
@@ -111,7 +120,7 @@ export default function UpdateProfile() {
                             {preview ? (
                                 <button 
                                     type="button"
-                                    onClick={handleRemoveImage}
+                                    onClick={removeProfilePic}
                                     className="absolute bottom-0 right-0 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 hover:scale-110 transition-all cursor-pointer"
                                     disabled={isUpdatingProfile}
                                 >
@@ -132,7 +141,7 @@ export default function UpdateProfile() {
                                         id="avatar-upload"
                                         accept="image/*"
                                         className="hidden"
-                                        onChange={handleImageUpload}
+                                        onChange={uploadProfilePic}
                                         disabled={isUpdatingProfile} 
                                     />
                                 </label>
@@ -146,6 +155,7 @@ export default function UpdateProfile() {
                                 value={profileData.fullName}
                                 placeholder="Add your name"
                                 onChange={handleChange("fullName")}
+                                error={errors.fullName}
                                 disabled={isUpdatingProfile}
                             />
 
@@ -155,6 +165,7 @@ export default function UpdateProfile() {
                                 value={profileData.dob}
                                 placeholder="Add your dob"
                                 onChange={handleChange("dob")}
+                                error={errors.dob}
                                 disabled={isUpdatingProfile}
                             />
                         </div>

@@ -62,7 +62,7 @@ export default function TransactionsInfoCard({
                                 <>
                                     {formatPrice({
                                         amount,
-                                        currency,
+                                        userCurrency: currency,
                                         rates
                                     })}
                                 </>

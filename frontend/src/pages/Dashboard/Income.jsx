@@ -8,22 +8,19 @@ import toast from 'react-hot-toast';
 import IncomeList from "../../components/income/IncomeList";
 import DeleteAlert from "../../components/DeleteAlert";
 import ExpenseNIncomeSkeleton from "../../components/skeletons/ExpenseNIncomeSkeleton";
-import { useAuthStore } from "../../store/useAuthStore";
+import { useActiveCurrency } from "../../hooks/useActiveCurrency";
 
 export default function Income() {
     const data = {
         source: "",
         amount: "",
-        date: null,
+        date: "",
         icon: ""
     };
 
     const [incomeFormData, setIncomeFormData] = useState(data);
     const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false);
     const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
-
-    const { authUser } = useAuthStore();
-    const currency = authUser?.currencyDetails;
 
     const { 
         loading,
@@ -33,6 +30,7 @@ export default function Income() {
         downloadIncomePdf,
         deleteIncome
     } = useIncomeStore();
+    const activeCurrency = useActiveCurrency();
 
     useEffect(() => {
         getIncome();
@@ -97,14 +95,14 @@ export default function Income() {
                         <div className="grid grid-cols-1 gap-6">
                             <div className="">
                                 <IncomeOverview 
-                                    currency={currency}
+                                    currency={activeCurrency.code}
                                     transactions={incomeData}
                                     onAddIncome={() => setOpenAddIncomeModal(true)}
                                 />
                             </div>
 
                             <IncomeList 
-                                currency={currency}
+                                currency={activeCurrency.code}
                                 transactions={incomeData} 
                                 onDownloadPDF={handleDownloadIncomeDetails}
                                 onDelete={(id) => setOpenDeleteAlert({ show: true, data: id })} 

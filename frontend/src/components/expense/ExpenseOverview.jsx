@@ -3,7 +3,11 @@ import { prepareExpenseLineChartData } from "../../lib/helper";
 import { Plus } from "lucide-react";
 import CustomLineChart from "../charts/CustomLineChart";
 
-export default function ExpenseOverview({ currency, transactions, onAddExpense }) {
+export default function ExpenseOverview({
+    currency,
+    transactions,
+    onAddExpense
+}) {
     const [chartData, setChartData] = useState([]);
     
     useEffect(() => {

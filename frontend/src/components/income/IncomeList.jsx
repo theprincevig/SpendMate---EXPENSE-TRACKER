@@ -2,7 +2,12 @@ import { Download } from "lucide-react";
 import TransactionsInfoCard from "../cards/TransactionsInfoCard";
 import moment from "moment";
 
-export default function IncomeList({ currency, transactions, onDownloadPDF, onDelete }) {
+export default function IncomeList({
+    currency,
+    transactions,
+    onDownloadPDF,
+    onDelete
+}) {
     if (!Array.isArray(transactions)) return null;
 
     return (

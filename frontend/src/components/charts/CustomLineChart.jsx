@@ -7,10 +7,13 @@ import {
     Tooltip,
     ResponsiveContainer
 } from 'recharts';
-
+import { useExchangeRateStore } from '../../store/useExchangeRateStore';
+import { formatPrice } from '../../utils/formatPrice';
 
 export default function CustomLineChart({ data, currency }) {
     if (!currency) return null;
+
+    const { rates, isFetchingRates } = useExchangeRateStore();
 
     function CustomTooltip({ active, payload }) {
         if (!active || !payload || !payload.length) return null;
@@ -23,7 +26,17 @@ export default function CustomLineChart({ data, currency }) {
                 <p className="text-sm text-gray-600">
                     Amount:{" "}
                     <span className="text-sm font-medium text-gray-900">
-                        
+                        {isFetchingRates && currency !== "INR" ? (
+                            <span className=" w-40 h-3 shimmer inline-block" />
+                        ) : (
+                            <>
+                                {formatPrice({
+                                    amount,
+                                    userCurrency: currency,
+                                    rates
+                                })}
+                            </>
+                        )}
                     </span>
                 </p>
             </div>
@@ -47,7 +60,11 @@ export default function CustomLineChart({ data, currency }) {
                     <YAxis 
                         tick={{ fontSize: 12, fill: "#555" }} 
                         stroke='none' 
-                        tickFormatter={(value) => formatAmount(value, currency)}
+                        tickFormatter={(value) => formatPrice({
+                            amount: value,
+                            userCurrency: currency,
+                            rates
+                        })}
                     />
 
                     <Tooltip content={CustomTooltip} />

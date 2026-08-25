@@ -2,16 +2,28 @@ import { Plus } from "lucide-react";
 import EmojiPickerPopup from "../EmojiPickerPopup";
 import Input from "../inputs/Input";
 
-export default function AddExpenseForm({ expenseFormData, setExpenseFormData, onAddExpense }) {
-    function handleChange(field, value) {
-        setExpenseFormData((prev) => ({ ...prev, [field]: value }));
-    }
+export default function AddExpenseForm({
+    expenseFormData,
+    setExpenseFormData,
+    onAddExpense
+}) {
+    const handleChange = (field) => (e) => {
+        setExpenseFormData(prev => ({
+            ...prev,
+            [field]: e.target.value
+        }));
+    };
     
     return (
         <>
             <EmojiPickerPopup 
                 icon={expenseFormData.icon}
-                onSelected={(selectedIcon) => handleChange("icon", selectedIcon)}
+                onSelected={(selectedIcon) => {
+                    setExpenseFormData(prev => ({
+                        ...prev,
+                        icon: selectedIcon
+                    }));
+                }}
             />
 
             <Input 
@@ -19,7 +31,7 @@ export default function AddExpenseForm({ expenseFormData, setExpenseFormData, on
                 placeholder="Rent, Groceries, Clothes, etc."
                 value={expenseFormData.category}
                 label="Expense Category"
-                onChange={({ target }) => handleChange("category", target.value)}
+                onChange={handleChange("category")}
             />
 
             <Input 
@@ -27,7 +39,7 @@ export default function AddExpenseForm({ expenseFormData, setExpenseFormData, on
                 placeholder="Add Amount"
                 value={expenseFormData.amount}
                 label="Amount"
-                onChange={({ target }) => handleChange("amount", target.value)}
+                onChange={handleChange("amount")}
             />
 
             <Input 
@@ -35,7 +47,7 @@ export default function AddExpenseForm({ expenseFormData, setExpenseFormData, on
                 placeholder=""
                 value={expenseFormData.date}
                 label="Date"
-                onChange={({ target }) => handleChange("date", target.value)}
+                onChange={handleChange("date")}
             />
             
             <div className="flex justify-end mt-6">

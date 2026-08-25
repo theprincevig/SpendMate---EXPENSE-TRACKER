@@ -31,7 +31,7 @@ export default function InfoCard({
                         <>
                             {formatPrice({
                                 amount: value,
-                                currency,
+                                userCurrency: currency,
                                 rates
                             })}
                         </>

@@ -2,16 +2,23 @@ import Input from "../inputs/Input";
 import EmojiPickerPopup from "../EmojiPickerPopup";
 import { Plus } from "lucide-react";
 
-export default function AddIncomeForm({ incomeFormData, setIncomeFormData, onAddIncome }) {
-    function handleChange(field, value) {
-        setIncomeFormData((prev) => ({ ...prev, [field]: value }));
-    }
+export default function AddIncomeForm({
+    incomeFormData,
+    setIncomeFormData,
+    onAddIncome
+}) {
+    const handleChange = (field) => (e) => {
+        setIncomeFormData(prev => ({
+            ...prev,
+            [field]: e.target.value
+        }));
+    };
 
     return (
         <div>
             <EmojiPickerPopup 
                 icon={incomeFormData.icon}
-                onSelected={(selectedIcon) => handleChange("icon", selectedIcon)}
+                onSelected={handleChange("icon")}
             />
 
             <Input 
@@ -19,7 +26,7 @@ export default function AddIncomeForm({ incomeFormData, setIncomeFormData, onAdd
                 placeholder="Freelance, Salary, etc."
                 value={incomeFormData.source}
                 label="Income Source"
-                onChange={({ target }) => handleChange("source", target.value)}
+                onChange={handleChange("source")}
             />
 
             <Input 
@@ -27,7 +34,7 @@ export default function AddIncomeForm({ incomeFormData, setIncomeFormData, onAdd
                 placeholder="Add Amount"
                 value={incomeFormData.amount}
                 label="Amount"
-                onChange={({ target }) => handleChange("amount", target.value)}
+                onChange={handleChange("amount")}
             />
 
             <Input 
@@ -35,7 +42,7 @@ export default function AddIncomeForm({ incomeFormData, setIncomeFormData, onAdd
                 placeholder=""
                 value={incomeFormData.date}
                 label="Date"
-                onChange={({ target }) => handleChange("date", target.value)}
+                onChange={handleChange("date")}
             />
 
             <div className="flex justify-end mt-6">

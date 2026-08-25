@@ -209,3 +209,36 @@
       0 0 0 rgba(16, 185, 129, 0);
   }
 }
+
+/* -------------------------------------------------- */
+/* Open & Close Effect animation for MODALS           */
+/* -------------------------------------------------- */
+.open {
+  animation: open-animate 0.2s ease-out;
+}
+
+.close {
+  animation: close-animate 0.2s ease-out;
+}
+
+@keyframes open-animate {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes close-animate {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}

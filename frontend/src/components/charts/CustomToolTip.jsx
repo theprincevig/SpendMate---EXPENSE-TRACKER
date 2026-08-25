@@ -19,7 +19,7 @@ export default function CustomToolTip({ active, payload, currency }) {
                         <>
                             {formatPrice({
                                 amount: value,
-                                currency,
+                                userCurrency: currency,
                                 rates
                             })}
                         </>

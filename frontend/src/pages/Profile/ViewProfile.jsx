@@ -80,7 +80,9 @@ export default function ViewProfile() {
                                 </p>
 
                                 <p className="text-sm text-gray-400">
-                                    Currency: {activeCurrency.details.symbol} {activeCurrency.code}
+                                    {activeCurrency.details.symbol}
+                                    {" "}
+                                    {activeCurrency.code}
                                 </p>
                             </div>
                         </div>

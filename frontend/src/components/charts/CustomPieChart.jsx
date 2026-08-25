@@ -76,7 +76,7 @@ export default function CustomPieChart({
                                 <>
                                     {formatPrice({
                                         amount: totalAmount,
-                                        currency,
+                                        userCurrency: currency,
                                         rates
                                     })}
                                 </>

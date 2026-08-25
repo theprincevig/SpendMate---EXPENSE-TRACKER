@@ -1,7 +1,12 @@
 import { COLOR_ARRAY } from "../../theme/color";
 import CustomPieChart from "../charts/CustomPieChart";
 
-export default function FinanceOverview({ currency, totalBalance, totalIncome, totalExpense }) {
+export default function FinanceOverview({
+    currency,
+    totalBalance,
+    totalIncome,
+    totalExpense
+}) {
     const balanceData = [
         { name: "Total Balance", amount: totalBalance },
         { name: "Total Income", amount: totalIncome },

@@ -14,9 +14,20 @@ export const formatPrice = ({
     });
 
     if (!convertedAmount) return amount;
+
+    // console.log("userCurrency:", userCurrency);
+    // console.log("currencyConfig:", currencyConfig);
+    // console.log("config for currency:", currencyConfig[userCurrency]);
+
+    const config = currencyConfig[userCurrency];
+
+    if (!config) {
+        console.error("Invalid currency:", userCurrency);
+        return amount;
+    }
                     
     return new Intl.NumberFormat(
-        currencyConfig[userCurrency].locale,
+        config.locale,
         {
             style: "currency",
             currency: userCurrency

@@ -38,7 +38,7 @@ export default function CustomBarChart({ data, currency }) {
                             <>
                                 {formatPrice({
                                     amount,
-                                    currency,
+                                    userCurrency: currency,
                                     rates
                                 })}
                             </>
@@ -59,7 +59,13 @@ export default function CustomBarChart({ data, currency }) {
                     <YAxis 
                         tick={{ fontSize: 12, fill: "#555" }} 
                         stroke='none' 
-                        tickFormatter={(value) => formatPrice(value, currency, rates)}
+                        tickFormatter={
+                            (value) => formatPrice({
+                                amount: value,
+                                userCurrency: currency,
+                                rates
+                            })
+                        }
                     />
 
                     <Tooltip content={CustomTooltip} />

@@ -8,17 +8,17 @@ import ExpenseList from "../../components/expense/ExpenseList";
 import AddExpenseForm from "../../components/expense/AddExpenseForm";
 import DeleteAlert from "../../components/DeleteAlert";
 import ExpenseNIncomeSkeleton from "../../components/skeletons/ExpenseNIncomeSkeleton";
-import { useAuthStore } from "../../store/useAuthStore";
 import AiChatbox from "./AiChatbox";
 import AiModal from "../../components/AiModal";
 import AiFloatingButton from "../../components/chats/AiFloatingButton";
 import { useAiChatStore } from "../../store/useAiChatStore";
+import { useActiveCurrency } from "../../hooks/useActiveCurrency";
 
 export default function Expense() {
     const data = {
         category: "",
         amount: "",
-        date: null,
+        date: "",
         icon: ""
     };
 
@@ -26,9 +26,8 @@ export default function Expense() {
     const [openAddExpenseModal, setOpenAddExpenseModal] = useState(false);
     const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
 
-    const { authUser } = useAuthStore();
     const { isAiModalOpen, openAiModal, closeAiModal } = useAiChatStore();
-    const currency = authUser?.currencyDetails;
+    const activeCurrency = useActiveCurrency();
 
     const { 
         loading,
@@ -107,13 +106,13 @@ export default function Expense() {
 
                         <div className="grid grid-cols-1 gap-6">
                             <ExpenseOverview 
-                                currency={currency}
+                                currency={activeCurrency.code}
                                 transactions={expenseData}
                                 onAddExpense={() => setOpenAddExpenseModal(true)}
                             />
 
                             <ExpenseList 
-                                currency={currency}
+                                currency={activeCurrency.code}
                                 transactions={expenseData} 
                                 onDownloadPDF={handleDownloadExpenseDetails}
                                 onDelete={(id) => setOpenDeleteAlert({ show: true, data: id })} 
