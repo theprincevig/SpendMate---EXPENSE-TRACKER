@@ -13,7 +13,7 @@ export default function ExpenseList({
     return (
         <div className="card">
             <div className="flex items-center justify-between">
-                <h5 className="text-lg">Expense Source</h5>
+                <h5 className="text-lg font-medium">Expense Source</h5>
 
                 <button 
                     onClick={onDownloadPDF}
@@ -33,7 +33,7 @@ export default function ExpenseList({
                         <TransactionsInfoCard 
                             type="expense"
                             key={expense._id}
-                            title={expense.source}
+                            title={expense.category}
                             amount={Number(expense.amount)}
                             icon={expense.icon}
                             currency={currency}

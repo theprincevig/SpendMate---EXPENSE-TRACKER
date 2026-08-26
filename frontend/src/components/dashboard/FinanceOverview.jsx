@@ -16,7 +16,7 @@ export default function FinanceOverview({
     return (
         <div className="card">
             <div className="flex items-center justify-between">
-                <h5 className="text-xl">Financial Overview</h5>
+                <h5 className="text-xl font-medium">Financial Overview</h5>
             </div>
 
             <CustomPieChart 

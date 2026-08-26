@@ -13,7 +13,7 @@ export default function IncomeList({
     return (
         <div className="card">
             <div className="flex items-center justify-between">
-                <h5 className="text-lg">Income Source</h5>
+                <h5 className="text-lg font-medium">Income Source</h5>
 
                 <button 
                     onClick={onDownloadPDF}

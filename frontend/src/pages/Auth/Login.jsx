@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { KeyRound, Loader, Mail } from "lucide-react";
+import toast from "react-hot-toast";
+
+import { hasErrors } from "../../errors/errors";
 import { useAuthStore } from "../../store/useAuthStore";
+import { validateLogin } from "../../errors/auth.error";
+
 import AuthLayout from "../../components/layouts/AuthLayout";
 import Input from "../../components/inputs/Input";
-import { hasErrors, validateLogin } from "../../errors/error";
-import toast from "react-hot-toast";
 
 export default function Login() {
     const data = { email: "", password: "" };

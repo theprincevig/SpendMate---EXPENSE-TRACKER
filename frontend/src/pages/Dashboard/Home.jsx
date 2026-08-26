@@ -1,8 +1,11 @@
 import { useEffect } from "react";
-import { useDashboardStore } from "../../store/useDashboardStore";
-import { CreditCard, HandCoins, WalletMinimal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { CreditCard, HandCoins, WalletMinimal } from "lucide-react";
+
+import { useDashboardStore } from "../../store/useDashboardStore";
+import { useActiveCurrency } from "../../hooks/useActiveCurrency";
 import { COLORS } from "../../theme/color";
+
 import DashboardLayout from "../../components/layouts/DashboardLayout";
 import InfoCard from "../../components/cards/InfoCard";
 import RecentTransactions from "../../components/dashboard/RecentTransactions";
@@ -12,7 +15,6 @@ import Last30DaysExpenses from "../../components/dashboard/Last30DaysExpenses";
 import RecentIncomeWithChart from "../../components/dashboard/RecentIncomeWithChart";
 import RecentIncome from "../../components/dashboard/RecentIncome";
 import DashboardSkeleton from "../../components/skeletons/DashboardSkeleton";
-import { useActiveCurrency } from "../../hooks/useActiveCurrency";
 
 export default function Home() {
     const { loading, dashboardData, getDashboardData } = useDashboardStore();

@@ -14,7 +14,7 @@ export default function EmojiPickerPopup({ icon, onSelected }) {
         <div className="flex flex-col md:flew-row items-start gap-5 mb-6">
             <div
                 onClick={() => setIsOpen(true)}
-                className='flex items-center gap-4 cursor-pointer'
+                className='flex items-center gap-2 cursor-pointer'
             >
                 <div className='w-10 h-10 flex items-center justify-center text-2xl hover:bg-emerald-50 hover:text-green-600 transition-all duration-200 rounded-lg'>
                     {icon ? (
@@ -28,7 +28,7 @@ export default function EmojiPickerPopup({ icon, onSelected }) {
                     )}
                 </div>
 
-                <p className='text-sm font-semibold font-[Comfortaa]'>
+                <p className='text-sm font-[Basic]'>
                     {icon ? "Change icon" : "Pick icon"}
                 </p>
             </div>

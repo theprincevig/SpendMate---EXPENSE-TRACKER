@@ -4,7 +4,7 @@ export default function AuthLayout({ children }) {
     return (
         <div className="flex">
             <div className="w-screen h-screen md:w-[60vw] px-12 pt-8 pb-12">
-                <h2 className="text-xl sm:text-2xl font-medium text-black">$pendMate</h2>
+                <h2 className="text-xl sm:text-2xl logofont font-medium text-black">SpendMate</h2>
                 {children}
             </div>
 
@@ -15,7 +15,7 @@ export default function AuthLayout({ children }) {
                     className='absolute top-20 opacity-5 w-3xl'
                 />
                 <div className="w-48 h-48 rounded-[40px] bg-green-600 absolute -top-7 -left-5" />
-                <div className="w-48 h-56 rounded-[40px] border-[20px] border-emerald-600 absolute top-[30%] -right-10" />
+                <div className="w-48 h-56 rounded-[40px] border-20px border-emerald-600 absolute top-[30%] -right-10" />
                 <div className="w-40 h-48 rounded-[40px] bg-lime-500 absolute -bottom-7 -left-5" />
 
                 <div className="grid grid-cols-1 z-20">

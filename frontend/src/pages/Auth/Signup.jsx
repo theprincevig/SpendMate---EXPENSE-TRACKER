@@ -1,12 +1,15 @@
+import { Link, useNavigate } from 'react-router-dom';
+import { KeyRound, Loader, Mail } from "lucide-react";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
+import { hasErrors } from "../../errors/errors";
+import { useAuthStore } from "../../store/useAuthStore";
+import { validateSignup } from '../../errors/auth.error';
+
+import PasswordStrengthMeter from "../../components/inputs/PasswordStrengthMeter";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import Input from "../../components/inputs/Input";
-import PasswordStrengthMeter from "../../components/inputs/PasswordStrengthMeter";
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from "react";
-import { KeyRound, Loader, Mail } from "lucide-react";
-import { useAuthStore } from "../../store/useAuthStore";
-import { hasErrors, validateSignup } from "../../errors/error";
-import toast from "react-hot-toast";
 
 export default function Signup() {
     const data = { email: "", password: "" };

@@ -10,7 +10,7 @@ export default function AiMessageBubble({ message, isLoading = false }) {
         >
             <div
                 className={`
-                    max-w-[75%] px-4 py-2 rounded-xl text-xs sm:text-sm font-[Comfortaa] font-medium shadow-md
+                    max-w-[75%] px-4 py-2 rounded-xl text-xs sm:text-sm font-[Basic] font-medium shadow-md
                     ${
                         isUser 
                         ? "bg-emerald-600 text-white rounded-br-none" 

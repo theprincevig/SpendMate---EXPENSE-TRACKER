@@ -1,13 +1,16 @@
-import DashboardLayout from "../../components/layouts/DashboardLayout";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../store/useAuthStore";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { ArrowLeft, Camera, Loader, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+
+import { validateProfile } from "../../errors/profile.error";
+import { useAuthStore } from "../../store/useAuthStore";
+import { hasErrors } from "../../errors/errors";
+
+import DashboardLayout from "../../components/layouts/DashboardLayout";
 import Input from "../../components/inputs/Input";
 import CharAvatar from "../../components/cards/CharAvatar";
 import UpdateProfileSkeleton from "../../components/skeletons/UpdateProfileSkeleton";
-import { hasErrors, validateProfile } from "../../errors/error";
 
 export default function UpdateProfile() {
     const { authUser, updateProfile, isUpdatingProfile } = useAuthStore();

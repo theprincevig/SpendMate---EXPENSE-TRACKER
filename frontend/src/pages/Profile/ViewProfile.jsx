@@ -1,12 +1,13 @@
-import DashboardLayout from "../../components/layouts/DashboardLayout";
+import { useState, useEffect } from "react";
 import { Pencil, User } from "lucide-react";
-import { useAuthStore } from "../../store/useAuthStore";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+
+import { useAuthStore } from "../../store/useAuthStore";
+import { useActiveCurrency } from "../../hooks/useActiveCurrency";
+
+import DashboardLayout from "../../components/layouts/DashboardLayout";
 import ViewProfileSkeleton from "../../components/skeletons/ViewProfileSkeleton";
 import AdvanceSettings from "../../components/AdvanceSettings";
-import { useActiveCurrency } from "../../hooks/useActiveCurrency";
 
 export default function ViewProfile() {
     const { authUser, viewProfile } = useAuthStore();

@@ -23,8 +23,8 @@ export default function IncomeOverview({
         <div className="card">
             <div className="flex items-center justify-between">
                 <div className="">
-                    <h5 className="text-base sm:text-lg">Income Overview</h5>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <h5 className="text-base sm:text-lg font-medium">Income Overview</h5>
+                    <p className="text-xs font-[Basic] tracking-wide text-gray-400 mt-0.5">
                         Track your earnings over time and analyze your income trends.
                     </p>
                 </div>
@@ -39,7 +39,11 @@ export default function IncomeOverview({
             </div>
 
             <div className="mt-10">
-                <CustomBarChart data={chartData} currency={currency} />
+                <CustomBarChart 
+                    data={chartData}
+                    currency={currency}
+                    labelKey="source"
+                />
             </div>
         </div>
     );

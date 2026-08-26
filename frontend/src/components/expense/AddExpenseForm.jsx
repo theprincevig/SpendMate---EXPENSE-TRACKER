@@ -3,23 +3,29 @@ import EmojiPickerPopup from "../EmojiPickerPopup";
 import Input from "../inputs/Input";
 
 export default function AddExpenseForm({
-    expenseFormData,
-    setExpenseFormData,
-    onAddExpense
+    data,
+    setData,
+    onAddExpense,
+    errors,
+    setErrors
 }) {
     const handleChange = (field) => (e) => {
-        setExpenseFormData(prev => ({
+        setData(prev => ({
             ...prev,
             [field]: e.target.value
+        }));
+        setErrors(prev => ({
+            ...prev,
+            [field]: ""
         }));
     };
     
     return (
         <>
             <EmojiPickerPopup 
-                icon={expenseFormData.icon}
+                icon={data.icon}
                 onSelected={(selectedIcon) => {
-                    setExpenseFormData(prev => ({
+                    setData(prev => ({
                         ...prev,
                         icon: selectedIcon
                     }));
@@ -29,25 +35,28 @@ export default function AddExpenseForm({
             <Input 
                 type="text"
                 placeholder="Rent, Groceries, Clothes, etc."
-                value={expenseFormData.category}
+                value={data.category}
                 label="Expense Category"
                 onChange={handleChange("category")}
+                error={errors.category}
             />
 
             <Input 
                 type="number"
                 placeholder="Add Amount"
-                value={expenseFormData.amount}
+                value={data.amount}
                 label="Amount"
                 onChange={handleChange("amount")}
+                error={errors.amount}
             />
 
             <Input 
                 type="date"
                 placeholder=""
-                value={expenseFormData.date}
+                value={data.date}
                 label="Date"
                 onChange={handleChange("date")}
+                error={errors.date}
             />
             
             <div className="flex justify-end mt-6">

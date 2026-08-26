@@ -1,9 +1,10 @@
 import { Trash, X } from "lucide-react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 import { useAiChatStore } from "../../store/useAiChatStore";
 import AiChatHistorySkeleton from "../skeletons/AiChatHistorySkeleton";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 export default function AiChatHistory({ onClose }) {
     const {

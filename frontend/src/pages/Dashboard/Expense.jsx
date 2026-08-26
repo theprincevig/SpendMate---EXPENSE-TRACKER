@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
-import { useExpenseStore } from "../../store/useExpenseStore";
 import toast from "react-hot-toast";
-import DashboardLayout from "../../components/layouts/DashboardLayout";
-import ExpenseOverview from "../../components/expense/ExpenseOverview";
-import Modal from "../../components/Modal";
-import ExpenseList from "../../components/expense/ExpenseList";
-import AddExpenseForm from "../../components/expense/AddExpenseForm";
-import DeleteAlert from "../../components/DeleteAlert";
-import ExpenseNIncomeSkeleton from "../../components/skeletons/ExpenseNIncomeSkeleton";
-import AiChatbox from "./AiChatbox";
-import AiModal from "../../components/AiModal";
-import AiFloatingButton from "../../components/chats/AiFloatingButton";
-import { useAiChatStore } from "../../store/useAiChatStore";
+
 import { useActiveCurrency } from "../../hooks/useActiveCurrency";
+import { useAiChatStore } from "../../store/useAiChatStore";
+import { useExpenseStore } from "../../store/useExpenseStore";
+import { hasErrors, validateExpense } from "../../errors/errors";
+
+import ExpenseNIncomeSkeleton from "../../components/skeletons/ExpenseNIncomeSkeleton";
+import ExpenseOverview from "../../components/expense/ExpenseOverview";
+import ExpenseList from "../../components/expense/ExpenseList";
+import DashboardLayout from "../../components/layouts/DashboardLayout";
+import AddExpenseForm from "../../components/expense/AddExpenseForm";
+import AiFloatingButton from "../../components/chats/AiFloatingButton";
+import AiModal from "../../components/AiModal";
+import AiChatbox from "./AiChatbox";
+import DeleteAlert from "../../components/DeleteAlert";
+import Modal from "../../components/Modal";
 
 export default function Expense() {
     const data = {
@@ -23,6 +26,8 @@ export default function Expense() {
     };
 
     const [expenseFormData, setExpenseFormData] = useState(data);
+    const [errors, setErrors] = useState(data);
+
     const [openAddExpenseModal, setOpenAddExpenseModal] = useState(false);
     const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
 
@@ -43,19 +48,11 @@ export default function Expense() {
         return () => {};
     }, []);
 
-    async function handleAddExpense() {
-        // Validation checks
-        if (!expenseFormData.category.trim()) return toast.error("Category is required.");
+    async function handleAddExpense(e) {
+        e.preventDefault();
 
-        if (
-            !expenseFormData.amount || 
-            isNaN(expenseFormData.amount) || 
-            Number(expenseFormData.amount) <= 0
-        ) {
-            return toast.error("Amount should be a valid number greater than 0.");
-        }
-
-        if (!expenseFormData.date) return toast.error("Date is required.");
+        const newErrors = validateExpense({ ...expenseData, icon: expenseData.icon});
+        if (hasErrors(newErrors)) return setErrors(newErrors);
 
         try {
             await addExpense(expenseFormData);
@@ -119,15 +116,14 @@ export default function Expense() {
                             />
                         </div>
 
-                        {isAiModalOpen && (
-                            <AiModal
-                                chatboxOpen={isAiModalOpen}
-                                chatboxClose={closeAiModal}
-                                chatboxTitle="AI Expense Assistant"
-                            >
-                                <AiChatbox />
-                            </AiModal>
-                        )}
+                        
+                        <AiModal
+                            chatboxOpen={isAiModalOpen}
+                            chatboxClose={closeAiModal}
+                            chatboxTitle="AI Expense Assistant"
+                        >
+                            <AiChatbox />
+                        </AiModal>
 
                         <Modal
                             isOpen={openAddExpenseModal}
@@ -135,9 +131,11 @@ export default function Expense() {
                             title="Add Expense"
                         >
                             <AddExpenseForm 
-                                expenseFormData={expenseFormData}
-                                setExpenseFormData={setExpenseFormData}
+                                data={expenseFormData}
+                                setData={setExpenseFormData}
                                 onAddExpense={handleAddExpense} 
+                                errors={errors}
+                                setErrors={setErrors}
                             />
                         </Modal>
 

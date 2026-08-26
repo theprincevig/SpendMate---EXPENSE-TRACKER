@@ -12,11 +12,6 @@ export const getInitials = (name) => {
         .join("");
 };
 
-export const formatNumber = (num, currency) => {
-    if (num === null || isNaN(num)) return "";
-    return new Intl.NumberFormat(currency.locale).format(num);
-};
-
 export const prepareExpenseBarChartData = (data) => {
     if (!Array.isArray(data)) return [];
 

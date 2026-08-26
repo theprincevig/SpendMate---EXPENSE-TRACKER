@@ -1,8 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { Brain, ChevronDown, ChevronUp, KeyRound } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import AiChatHistory from "./chats/AiChatHistory";
+
 import { useActiveCurrency } from "../hooks/useActiveCurrency";
+import AiChatHistory from "./chats/AiChatHistory";
 import CurrencyModal from "./CurrencyModal";
 
 export default function AdvanceSettings() {

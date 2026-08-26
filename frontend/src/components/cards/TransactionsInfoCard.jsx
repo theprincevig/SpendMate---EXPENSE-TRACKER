@@ -34,7 +34,7 @@ export default function TransactionsInfoCard({
 
             <div className="flex-1 flex items-center justify-between">
                 <div className="">
-                    <p className="text-sm text-gray-700 font-medium font-[Comfortaa]">{title}</p>
+                    <p className="text-sm text-gray-700 font-medium font-[Basic]">{title}</p>
                     <p className="text-xs text-gray-400 mt-1">{date}</p>
                 </div>
 

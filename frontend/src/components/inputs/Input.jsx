@@ -57,7 +57,7 @@ export default function Input({
                 )}
             </div>
 
-            {error && <div className="absolute -bottom-5 left-5 text-xs text-red-500">{error}</div>}
+            {error && <div className="absolute -bottom-5 left-5 font-[Basic] tracking-wider text-xs text-red-500">{error}</div>}
         </div>
     );
 }

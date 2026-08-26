@@ -1,11 +1,14 @@
-import { useState } from "react";
-import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import Input from "../../components/inputs/Input";
 import { KeyRound, Loader } from "lucide-react";
-import PasswordStrengthMeter from "../../components/inputs/PasswordStrengthMeter";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { hasErrors, validateChangePassword } from "../../errors/error";
+
+import { validateChangePassword } from "../../errors/auth.error";
+import { hasErrors } from "../../errors/errors";
+import { useAuthStore } from "../../store/useAuthStore";
+
+import PasswordStrengthMeter from "../../components/inputs/PasswordStrengthMeter";
+import Input from "../../components/inputs/Input";
 
 export default function ChangePassword() {
     const initState = {
@@ -49,7 +52,7 @@ export default function ChangePassword() {
         <div className="h-screen flex items-center justify-center p-4 ">
             <div className="w-full max-w-xl flex flex-col items-center justify-center shadow-lg rounded-xl overflow-hidden">
                 <div className="w-full bg-emerald-500 text-white flex flex-col items-center justify-center py-1">
-                    <h3 className="sm:text-2xl text-lg font-semibold SansFlex uppercase">Change Pa$$wo₹d</h3>
+                    <h3 className="sm:text-2xl text-lg uppercase">Change Password</h3>
                     <p className="sm:text-sm text-xs">A stronger password, a safer account.</p>
                 </div>
 

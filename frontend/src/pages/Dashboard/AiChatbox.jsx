@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { useAiChatStore } from "../../store/useAiChatStore";
+
 import AiChatBody from "../../components/chats/AiChatBody";
 import AiMessageInput from "../../components/chats/AiMessageInput";
-import { useAiChatStore } from "../../store/useAiChatStore";
 import AiChatboxSkeleton from "../../components/skeletons/AiChatboxSkeleton";
 
 export default function AiChatbox() {

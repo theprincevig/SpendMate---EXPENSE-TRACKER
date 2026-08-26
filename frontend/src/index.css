@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Basic&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Zen+Dots&display=swap');
 @import "tailwindcss";
 
 
@@ -20,10 +20,11 @@
 }
 
 @layer utilities {
-    .SansFlex {
-        font-family: "Google Sans Flex", sans-serif;
+    .logofont {
+      font-family: "Zen Dots", sans-serif;
     }
 }
+
 
 .input-box {
     @apply w-full flex justify-between gap-3 text-sm text-black rounded-full px-4 py-3 mb-4 mt-3 border outline-none transition-all;
@@ -50,11 +51,11 @@
 }
 
 .card-btn {
-    @apply flex items-center gap-3 text-xs font-medium font-[Comfortaa] text-gray-700 hover:text-green-500 bg-gray-50 hover:bg-emerald-50 px-4 py-1.5 rounded-lg border border-gray-200/50 transition-all cursor-pointer;
+    @apply flex items-center gap-3 text-xs font-medium text-gray-700 hover:text-green-500 bg-gray-50 hover:bg-emerald-50 px-4 py-1.5 rounded-lg border border-gray-200/50 transition-all cursor-pointer;
 }
 
 .add-btn {
-    @apply flex items-center gap-1.5 text-xs md:text-sm font-medium font-[Comfortaa] text-green-600 whitespace-nowrap bg-emerald-50 border border-green-100 rounded-xl px-4 py-2 cursor-pointer;
+    @apply flex items-center gap-1.5 text-xs md:text-sm font-medium text-green-600 whitespace-nowrap bg-emerald-50 border border-green-100 rounded-xl px-4 py-2 cursor-pointer;
 }
 
 .add-btn-fill {
@@ -115,7 +116,7 @@
 }
 
 .AI_chat-input:placeholder-shown {
-  @apply text-sm font-[Comfortaa] font-medium;
+  @apply text-sm font-[Basic] font-medium;
 }
 
 .AI_send-btn {
@@ -214,14 +215,14 @@
 /* Open & Close Effect animation for MODALS           */
 /* -------------------------------------------------- */
 .open {
-  animation: open-animate 0.2s ease-out;
+  animation: open-y-animate 0.2s ease-out;
 }
 
 .close {
-  animation: close-animate 0.2s ease-out;
+  animation: close-y-animate 0.2s ease-out;
 }
 
-@keyframes open-animate {
+@keyframes open-y-animate {
   from {
     transform: scale(0.95);
     opacity: 0;
@@ -232,13 +233,46 @@
   }
 }
 
-@keyframes close-animate {
+@keyframes close-y-animate {
   from {
     transform: scale(1);
     opacity: 1;
   }
   to {
     transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------- */
+/* Open & Close Effect animation for MODALS           */
+/* -------------------------------------------------- */
+.open-y {
+  animation: open-y-animate 0.2s ease-out;
+}
+
+.close-y {
+  animation: close-y-animate 0.2s ease-out;
+}
+
+@keyframes open-y-animate {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes close-y-animate {
+  from {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(40px);
     opacity: 0;
   }
 }

@@ -1,10 +1,16 @@
 import { RefreshCcwIcon, Send } from "lucide-react";
-import AiQuickActions from "./AiQuickActions";
-import { useAiChatStore } from "../../store/useAiChatStore";
-import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-export default function AiMessageInput({ input, setInput, onSend, disabled }) {
+import { useAiChatStore } from "../../store/useAiChatStore";
+import AiQuickActions from "./AiQuickActions";
+
+export default function AiMessageInput({
+    input,
+    setInput,
+    onSend,
+    disabled
+}) {
     const { newChat, messages } = useAiChatStore();
     const [spinReset, setSpinReset] = useState(false);
     const [isTyping, setIsTyping] = useState(false);

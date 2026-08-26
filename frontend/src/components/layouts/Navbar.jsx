@@ -18,7 +18,7 @@ export default function Navbar({ activeMenu }) {
                 )}
             </button>
 
-            <h2 className="text-lg sm:text-2xl font-medium text-black">$pendMate</h2>
+            <h2 className="text-lg sm:text-2xl logofont text-black">Spendmate</h2>
 
             {openSideMenu && (
                 <div className="fixed top-[61px] -ml-7 bg-white">

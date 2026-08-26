@@ -11,7 +11,11 @@ import {
 import { useExchangeRateStore } from '../../store/useExchangeRateStore';
 import { formatPrice } from '../../utils/formatPrice';
 
-export default function CustomBarChart({ data, currency }) {
+export default function CustomBarChart({
+    data,
+    currency,
+    labelKey
+}) {
     if (!currency) return null;
 
     const { rates, isFetchingRates } = useExchangeRateStore();
@@ -24,11 +28,15 @@ export default function CustomBarChart({ data, currency }) {
     function CustomTooltip({ active, payload }) {
         if (!active || !payload || !payload.length) return null;
 
-        const { source, amount } = payload[0].payload;
+        // console.log("FULL PAYLOAD:", payload);
+        // console.log("DATA OBJECT:", payload[0].payload);
+
+        const { amount } = payload[0].payload;
+        const label = payload[0].payload[labelKey];
 
         return (
             <div className="bg-white shadow-md rounded-lg p-2 border border-gray-300">
-                <p className="text-xs font-semibold text-green-800 mb-1">{source}</p>
+                <p className="text-xs font-semibold text-green-800 mb-1">{label}</p>
                 <p className="text-sm text-gray-600">
                     Amount:{" "}
                     <span className="text-sm font-medium text-gray-900">
@@ -55,7 +63,7 @@ export default function CustomBarChart({ data, currency }) {
                 <BarChart data={data}>
                     <CartesianGrid stroke='none' />
 
-                    <XAxis dataKey='month' tick={{ fontSize: 12, fill: "#555" }} stroke='none' />
+                    <XAxis dataKey={labelKey} tick={{ fontSize: 12, fill: "#555" }} stroke='none' />
                     <YAxis 
                         tick={{ fontSize: 12, fill: "#555" }} 
                         stroke='none' 
