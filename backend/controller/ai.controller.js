@@ -81,15 +81,19 @@ module.exports.chatWithAi = async (req, res) => {
 
     } catch (error) {
         console.error("AI Chat Error:", error);
-        
-        if (error.code === "insufficient_quota") {
-            return res.status(500).json({
+
+        if (error.message === "AI_QUOTA_EXCEEDED") {
+            return res.status(429).json({
                 success: false,
-                reply: "AI usage limit reached. Please try again later."
+                code: "AI_QUOTA_EXCEEDED",
+                reply: "You can't ask anything to AI Assistant right now. The AI usage limit has been exceeded."
             });
         }
 
-        res.status(500).json({ message: "AI service failed" });
+        return res.status(500).json({
+            success: false,
+            message: "AI service failed"
+        });
     }
 };
 

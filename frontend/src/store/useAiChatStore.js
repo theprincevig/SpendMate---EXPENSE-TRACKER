@@ -14,6 +14,7 @@ export const useAiChatStore = create((set, get) => ({
     initialLoading: true,
     aiTyping: false,
     error: null,
+    aiUnavailable: false,
 
     isAiModalOpen: false,
 
@@ -80,7 +81,9 @@ export const useAiChatStore = create((set, get) => ({
 
     sendMessage: async (userMessage) => {
         if (!userMessage.trim()) return;
-        const { activeChatId } = get();
+        const { activeChatId, aiUnavailable } = get();
+
+        if (aiUnavailable) return;
 
         // Add user message instantly
         set((state) => ({
@@ -116,6 +119,26 @@ export const useAiChatStore = create((set, get) => ({
 
         } catch (error) {
             console.error("AI chat error:", error);
+
+            const responseData = error.response?.data;
+
+            if (responseData?.code === "AI_QUOTA_EXCEEDED") {
+                set((state) => ({
+                    aiUnavailable: true,
+                    messages: [
+                        ...state.messages,
+                        {
+                            role: "ai",
+                            content:
+                                "You can't ask anything to AI Assistant right now. The AI usage limit has been exceeded."
+                        }
+                    ],
+                    error: null
+                }));
+
+                return;
+            }
+
             set((state) => ({
                 messages: [
                     ...state.messages,
@@ -126,8 +149,8 @@ export const useAiChatStore = create((set, get) => ({
                 ],
                 error: "AI failed to respond.",
             }));
-            throw error;
 
+            throw error;
         } finally {
             set({ aiTyping: false });
         }
