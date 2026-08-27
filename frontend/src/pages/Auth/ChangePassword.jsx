@@ -1,53 +1,50 @@
-import { useState } from "react";
-import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import Input from "../../components/inputs/Input";
 import { KeyRound, Loader } from "lucide-react";
-import PasswordStrengthMeter from "../../components/inputs/PasswordStrengthMeter";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { validatePassword } from "../../lib/helper";
+
+import { validateChangePassword } from "../../errors/auth.error";
+import { hasErrors } from "../../errors/errors";
+import { useAuthStore } from "../../store/useAuthStore";
+
+import PasswordStrengthMeter from "../../components/inputs/PasswordStrengthMeter";
+import Input from "../../components/inputs/Input";
 
 export default function ChangePassword() {
+    const initState = {
+        current: "",
+        new: "",
+        confirm: ""
+    };
+
     const { isResettingPassword, changePassword, logout } = useAuthStore();
     const navigate = useNavigate();
 
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [error, setError] = useState(null);
+    const [password, setPassword] = useState(initState);
+    const [errors, setErrors] = useState(initState);
 
-    async function handleChange(e) {
+    const handleChange = (field) => (e) => {
+        setPassword(prev => ({ ...prev, [field]: e.target.value }));
+        setErrors(prev => ({ ...prev, [field]: "" }));
+    }
+
+    async function handleSubmit(e) {
         e.preventDefault();
 
-        if (!currentPassword) {
-            setError("Please enter your current password.");
-            return;
-        }
-
-        if (newPassword !== confirmPassword) {
-            setError("Passwords doesn't match.");
-            return;
-        }
-
-        if (!validatePassword(newPassword || confirmPassword)) {
-            setError("Please enter a strong/unique password.");
-            return;
-        }
-
-        setError("");
-
+        const newErrors = validateChangePassword(password);
+        if (hasErrors(newErrors)) return setErrors(newErrors);
+        
         try {
-            await changePassword(currentPassword, newPassword);
+            await changePassword(password.current, password.new);
             await logout(); // if you have logout in store
+            setPassword(initState);
+
             toast.success("Password Updated Successfully! Please login again.");
             navigate("/login");
 
-            setCurrentPassword("");
-            setNewPassword("");
-            setConfirmPassword("");
         } catch (error) {
-            console.error("Error updating password :", error);
-            toast.error(error.response?.data?.message || "Failed to Updating Password.");
+            console.error(error.error);
+            toast.error(error.error || "Failed to Updating Password.");
         }
     }
 
@@ -55,49 +52,45 @@ export default function ChangePassword() {
         <div className="h-screen flex items-center justify-center p-4 ">
             <div className="w-full max-w-xl flex flex-col items-center justify-center shadow-lg rounded-xl overflow-hidden">
                 <div className="w-full bg-emerald-500 text-white flex flex-col items-center justify-center py-1">
-                    <h3 className="sm:text-2xl text-lg font-semibold SansFlex uppercase">Change Pa$$wo₹d</h3>
+                    <h3 className="sm:text-2xl text-lg uppercase">Change Password</h3>
                     <p className="sm:text-sm text-xs">A stronger password, a safer account.</p>
                 </div>
 
                 <form 
-                    onSubmit={handleChange}
+                    onSubmit={handleSubmit}
                     className="w-full p-4"
                 >
                     <Input 
                         icon={<KeyRound size={16} />}
-                        type="password"
-                        value={currentPassword}
                         label="Current Password"
+                        type="password"
+                        value={password.current}
                         placeholder="Enter current password"
-                        onChange={({ target }) => setCurrentPassword(target.value)}
+                        onChange={handleChange("current")}
+                        error={errors.current}
                     />
 
                     <Input 
                         icon={<KeyRound size={16} />}
                         type="password"
-                        value={newPassword}
+                        value={password.new}
                         label="New Password"
                         placeholder="Enter new password"
-                        onChange={({ target }) => {
-                            setNewPassword(target.value)
-                            setError(null);
-                        }}
+                        onChange={handleChange("new")}
+                        error={errors.new}
                     />
 
                     <Input 
                         icon={<KeyRound size={16} />}
                         type="password"
-                        value={confirmPassword}
+                        value={password.confirm}
                         label="Confirm Password"
                         placeholder="Enter confirm password"
-                        onChange={({ target }) => setConfirmPassword(target.value)}
+                        onChange={handleChange("confirm")}
+                        error={errors.confirm}
                     />
 
-                    {error && (
-                        <p className="text-xs text-red-500 ml-4">{error}</p>
-                    )}
-
-                    <PasswordStrengthMeter password={newPassword} />
+                    <PasswordStrengthMeter password={password.new} />
 
                     <button 
                         type="submit"

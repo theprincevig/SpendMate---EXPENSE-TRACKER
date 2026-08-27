@@ -2,13 +2,18 @@ import { Download } from "lucide-react";
 import TransactionsInfoCard from "../cards/TransactionsInfoCard";
 import moment from "moment";
 
-export default function ExpenseList({ currency, transactions, onDownloadPDF, onDelete }) {
+export default function ExpenseList({
+    currency,
+    transactions,
+    onDownloadPDF,
+    onDelete
+}) {
     if (!Array.isArray(transactions)) return null;
 
     return (
         <div className="card">
             <div className="flex items-center justify-between">
-                <h5 className="text-lg">Expense Source</h5>
+                <h5 className="text-lg font-medium">Expense Source</h5>
 
                 <button 
                     onClick={onDownloadPDF}
@@ -28,7 +33,7 @@ export default function ExpenseList({ currency, transactions, onDownloadPDF, onD
                         <TransactionsInfoCard 
                             type="expense"
                             key={expense._id}
-                            title={expense.source}
+                            title={expense.category}
                             amount={Number(expense.amount)}
                             icon={expense.icon}
                             currency={currency}

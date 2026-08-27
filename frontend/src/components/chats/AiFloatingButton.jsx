@@ -19,7 +19,7 @@ export default function AiFloatingButton({ onClick }) {
     return (
         <div
             className={`
-                absolute group bottom-10 right-10
+                absolute group bottom-10 right-10 z-1000
                 ${bounce ? "AI_smart-bounce" : ""}
             `}
             onMouseEnter={() => setHovered(true)}
@@ -38,7 +38,7 @@ export default function AiFloatingButton({ onClick }) {
                 </div>
 
                 {/* Text */}
-                <span className="whitespace-nowrap opacity-0 transalte-x-2 font-[Comfortaa] font-medium group-hover:opacity-100 group-hover:transalate-x-0 transition-all duration-300 delay-100">
+                <span className="whitespace-nowrap opacity-0 transalte-x-2 font-[Basic] font-medium group-hover:opacity-100 group-hover:transalate-x-0 transition-all duration-300 delay-100">
                     AI Assistant
                 </span>
             </button>

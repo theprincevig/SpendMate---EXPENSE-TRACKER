@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { useAiChatStore } from "../../store/useAiChatStore";
+
 import AiChatBody from "../../components/chats/AiChatBody";
 import AiMessageInput from "../../components/chats/AiMessageInput";
-import { useAiChatStore } from "../../store/useAiChatStore";
 import AiChatboxSkeleton from "../../components/skeletons/AiChatboxSkeleton";
 
 export default function AiChatbox() {
@@ -12,10 +13,9 @@ export default function AiChatbox() {
         aiTyping,
         activeChatId,
         newChat,
-        loadChatSession
+        loadChatSession,
+        aiUnavailable
     } = useAiChatStore();
-
-    console.log(initialLoading);
 
     const [input, setInput] = useState("");
 
@@ -32,7 +32,7 @@ export default function AiChatbox() {
     }, [activeChatId, newChat]);
 
     function handleSend() {
-        if (!input.trim() || aiTyping) return;
+        if (!input.trim() || aiTyping || aiUnavailable) return;
 
         sendMessage(input);
         setInput("");
@@ -52,7 +52,7 @@ export default function AiChatbox() {
                         input={input} 
                         setInput={setInput} 
                         onSend={handleSend}
-                        disabled={aiTyping}
+                        disabled={aiTyping || aiUnavailable}
                     />
                 </div>
             )}

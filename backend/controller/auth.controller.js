@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const currencyConfig = require('../config/currency.Config.js');
-const { generateTokenAndCookie } = require('../utils/generateToken');
+const { generateTokenAndCookie, cookieOptions } = require('../utils/generateToken');
 
 module.exports.checkAuth = async (req, res) => {
     try {
@@ -91,12 +91,6 @@ module.exports.loginUser = async (req, res) => {
 
 };
 
-const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    expires: new Date(0)
-}
 module.exports.logoutUser = async (req, res) => {
     try {
         res.cookie("jwt", "", cookieOptions);
@@ -108,30 +102,6 @@ module.exports.logoutUser = async (req, res) => {
     } catch (error) {
         console.error("Logout Error: ", error);
         return res.status(500).json({ success: false, error: error.message });
-    }
-};
-
-module.exports.getUserInfo = async (req, res) => {
-    try {
-        const userId = req.user._id;
-        const user = await User.findById(userId).select("-password");
-
-        if (!user) return res.status(404).json({ success: false, message: "User not found." });
-
-        return res.status(200).json({
-            success: true,
-            user: {
-                ...user.toObject(),
-                currencyDetails: currencyConfig[user.currency]
-            }
-        });
-
-    } catch (error) {
-        console.error("User info Error: ", error);
-        return res.status(500).json({
-            success: false,            
-            error: error.message
-        });
     }
 };
 

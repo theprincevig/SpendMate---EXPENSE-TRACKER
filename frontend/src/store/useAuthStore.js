@@ -15,6 +15,7 @@ const normalizeUser = (user) => {
 
 export const useAuthStore = create((set, get) => ({
     authUser: null,
+
     isCheckingAuth: true,
     isSigningUp: false, // Signup loading state
     isLoggingIn: false, // Login loading state
@@ -87,24 +88,6 @@ export const useAuthStore = create((set, get) => ({
         }
     },
 
-    getUserInfo: async () => {
-        try {
-            const res = await axiosInstance.get(API_PATHS.AUTH.GET_USER_INFO);
-            const { user } = res.data;
-
-            if (user) {
-                set({ authUser: normalizeUser(user) });
-                return user;
-            }
-
-            return null;
-
-        } catch (error) {
-            console.error(`Get User info error: ${error}`);
-            throw error.response?.data || error;
-        }
-    },
-
     viewProfile: async () => {
         try {
             const res = await axiosInstance.get(API_PATHS.PROFILE.ME);
@@ -113,8 +96,9 @@ export const useAuthStore = create((set, get) => ({
             if (res.data?.user) {
                 set({ authUser: normalizeUser(user) });
                 return user;
+
             } else {
-                console.error("Failed to fetch user's profile: ", res.data?.error);
+                console.error("Failed to fetch own profile: ", res.data?.error);
                 return null;
             }
         } catch (error) {
@@ -127,14 +111,20 @@ export const useAuthStore = create((set, get) => ({
         set({ isUpdatingProfile: true });
         try {
             const formData = new FormData();
-            if (data.fullName) formData.append("fullName", data.fullName);
-            if (data.dob) formData.append("dob", data.dob);
-            if (data.profilePic) formData.append("profilePic", data.profilePic);
-            if (data.currency) formData.append("currency", data.currency);
+            formData.append(
+                "profileData",
+                JSON.stringify({
+                    fullName: data.fullName,
+                    dob: data.dob,
+                })
+            );
+            if (data.profilePic) formData.append("picture", data.profilePic);
 
-            const res = await axiosInstance.put(API_PATHS.PROFILE.ME, formData, {
-                headers: { "Content-Type": "multipart/form-data" }
-            });
+            const res = await axiosInstance.put(
+                API_PATHS.PROFILE.ME,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
 
             const { user } = res.data;
 
@@ -158,7 +148,10 @@ export const useAuthStore = create((set, get) => ({
     changePassword: async ({ oldPassword, newPassword }) => {
         set({ isResettingPassword: true });
         try {
-            const res = await axiosInstance.post(API_PATHS.AUTH.CHANGE_PASSWORD, { oldPassword, newPassword });
+            const res = await axiosInstance.post(
+                API_PATHS.AUTH.CHANGE_PASSWORD,
+                { oldPassword, newPassword }
+            );
 
             // Force logout
             await axiosInstance.post(API_PATHS.AUTH.LOGOUT);
@@ -172,6 +165,23 @@ export const useAuthStore = create((set, get) => ({
 
         } finally {
             set({ isResettingPassword: false });
+        }
+    },
+
+    changeCurrency: async (currency) => {
+        try {
+            const res = await axiosInstance.patch(
+                API_PATHS.PROFILE.CHANGE_CURRENCY,
+                { currency }
+            );
+
+            const { user } = res.data;
+            set({ authUser: normalizeUser(user) });
+
+            return user;
+        } catch (error) {
+            console.error(`Change currency error: ${error}`);
+            throw error.response?.data || error;
         }
     },
 }));

@@ -1,11 +1,17 @@
+import { useNavigate } from "react-router-dom";
 import { Brain, ChevronDown, ChevronUp, KeyRound } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
+import { useActiveCurrency } from "../hooks/useActiveCurrency";
 import AiChatHistory from "./chats/AiChatHistory";
+import CurrencyModal from "./CurrencyModal";
 
 export default function AdvanceSettings() {
     const [open, setOpen] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
+    const [showCurrencies, setShowCurrencies] = useState(false);
+
+    const activeCurrency = useActiveCurrency();
     const navigate = useNavigate();
 
     return (
@@ -46,6 +52,19 @@ export default function AdvanceSettings() {
                                 Change <KeyRound size={12} />
                             </button>
                         </div>
+
+                        {/* Currency Changer */}
+                        <button 
+                            onClick={() => setShowCurrencies(true)}
+                            className="w-full flex items-center justify-between p-2 hover:bg-zinc-100 cursor-pointer"
+                        >
+                            <h3 className="text-xs sm:text-sm">Currency Changer</h3>
+                            <p className="text-sm font-semibold text-zinc-600">
+                                {activeCurrency.details.symbol}
+                                {" "}
+                                {activeCurrency.code}
+                            </p>
+                        </button>
                     </div>
                 )}
             </div>
@@ -53,6 +72,11 @@ export default function AdvanceSettings() {
             {showHistory && (
                 <AiChatHistory onClose={() => setShowHistory(false)} />
             )}
+
+            <CurrencyModal 
+                isOpen={showCurrencies}
+                onClose={() => setShowCurrencies(false)} 
+            />
         </div>
     );
 }

@@ -1,20 +1,25 @@
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function AiModal({ children, chatboxOpen, chatboxClose, chatboxTitle }) {
-    const [showModal, setShowModal] = useState(false);
+export default function AiModal({
+    children,
+    chatboxOpen,
+    chatboxClose,
+    chatboxTitle
+}) {
+    const [showModal, setShowModal] = useState(chatboxOpen);
     
     // Handle mount/unmount animation
     useEffect(() => {
-        let timer;
-
         if (chatboxOpen) {
             setShowModal(true);
         } else {
-            timer = setTimeout(() => setShowModal(false), 500); // match animation duration
-        }
+            const timer = setTimeout(() => {
+                setShowModal(false);
+            }, 300);
 
-        return () => clearTimeout(timer);
+            return () => clearTimeout(timer);
+        }
     }, [chatboxOpen]);
 
     useEffect(() => {
@@ -41,15 +46,14 @@ export default function AiModal({ children, chatboxOpen, chatboxClose, chatboxTi
             <div 
                 onClick={(e) => e.stopPropagation()}
                 className={`
-                    relative w-full max-w-4xl px-3  
-                    transform transition-all duration-500 ease-out 
-                    ${chatboxOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"}
+                    relative w-full max-w-4xl px-3 
+                    ${chatboxOpen ? "open" : "close"}
                 `}
             >
                 <div className="bg-white rounded-2xl shadow-xl shadow-emerald-100 overflow-hidden">
                     {/* Header */}
                     <div className="flex items-center justify-between bg-emerald-600 p-4">
-                        <h3 className="text-lg text-white font-semibold SansFlex tracking-wide">{chatboxTitle}</h3>
+                        <h3 className="text-lg text-white font-semibold tracking-wide">{chatboxTitle}</h3>
                         <button
                             type="button"
                             onClick={chatboxClose}

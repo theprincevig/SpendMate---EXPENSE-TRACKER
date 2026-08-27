@@ -3,7 +3,11 @@ import { prepareExpenseLineChartData } from "../../lib/helper";
 import { Plus } from "lucide-react";
 import CustomLineChart from "../charts/CustomLineChart";
 
-export default function ExpenseOverview({ currency, transactions, onAddExpense }) {
+export default function ExpenseOverview({
+    currency,
+    transactions,
+    onAddExpense
+}) {
     const [chartData, setChartData] = useState([]);
     
     useEffect(() => {
@@ -18,9 +22,9 @@ export default function ExpenseOverview({ currency, transactions, onAddExpense }
     return (
         <div className="card">
             <div className="flex items-center justify-between">
-                <div className="">
-                    <h5 className="text-base sm:text-lg">Expense Overview</h5>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                <div className="flex flex-col justify-center">
+                    <h5 className="text-base sm:text-lg font-medium">Expense Overview</h5>
+                    <p className="text-xs font-[Basic] tracking-wide text-gray-400 mt-0.5">
                         Track your expenses over time and analyze your expense trends.
                     </p>
                 </div>

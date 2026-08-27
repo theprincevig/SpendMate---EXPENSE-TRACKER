@@ -1,29 +1,31 @@
 import { useEffect, useState } from "react";
-import { useIncomeStore } from "../../store/useIncomeStore";
-import DashboardLayout from "../../components/layouts/DashboardLayout";
-import IncomeOverview from "../../components/income/IncomeOverview";
-import Modal from "../../components/Modal";
-import AddIncomeForm from "../../components/income/AddIncomeForm";
 import toast from 'react-hot-toast';
-import IncomeList from "../../components/income/IncomeList";
-import DeleteAlert from "../../components/DeleteAlert";
+
+import { useIncomeStore } from "../../store/useIncomeStore";
+import { useActiveCurrency } from "../../hooks/useActiveCurrency";
+import { hasErrors, validateIncome } from "../../errors/errors";
+
+import DashboardLayout from "../../components/layouts/DashboardLayout";
 import ExpenseNIncomeSkeleton from "../../components/skeletons/ExpenseNIncomeSkeleton";
-import { useAuthStore } from "../../store/useAuthStore";
+import IncomeOverview from "../../components/income/IncomeOverview";
+import IncomeList from "../../components/income/IncomeList";
+import AddIncomeForm from "../../components/income/AddIncomeForm";
+import DeleteAlert from "../../components/DeleteAlert";
+import Modal from "../../components/Modal";
 
 export default function Income() {
     const data = {
         source: "",
         amount: "",
-        date: null,
+        date: "",
         icon: ""
     };
 
     const [incomeFormData, setIncomeFormData] = useState(data);
+    const [errors, setErrors] = useState(data);
+    
     const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false);
     const [openDeleteAlert, setOpenDeleteAlert] = useState({ show: false, data: null });
-
-    const { authUser } = useAuthStore();
-    const currency = authUser?.currencyDetails;
 
     const { 
         loading,
@@ -33,22 +35,21 @@ export default function Income() {
         downloadIncomePdf,
         deleteIncome
     } = useIncomeStore();
+    const activeCurrency = useActiveCurrency();
 
     useEffect(() => {
         getIncome();
         return () => {};
     }, []);
 
-    async function handleAddIncome() {
-        // Validation checks
-        if (!incomeFormData.source.trim()) return toast.error("Source is required.");
+    async function handleAddIncome(e) {
+        e.preventDefault();
 
-        if (!incomeFormData.amount || isNaN(incomeFormData.amount) || Number(incomeFormData.amount) <= 0) {
-            toast.error("Amount should be a valid number greater than 0.");
-            return;
-        }
-
-        if (!incomeFormData.date) return toast.error("Date is required.");
+        const newErrors = validateIncome({
+            ...incomeFormData,
+            icon: incomeFormData.icon
+        });
+        if (hasErrors(newErrors)) return setErrors(newErrors);
 
         try {
             await addIncome(incomeFormData);
@@ -95,14 +96,14 @@ export default function Income() {
                         <div className="grid grid-cols-1 gap-6">
                             <div className="">
                                 <IncomeOverview 
-                                    currency={currency}
+                                    currency={activeCurrency.code}
                                     transactions={incomeData}
                                     onAddIncome={() => setOpenAddIncomeModal(true)}
                                 />
                             </div>
 
                             <IncomeList 
-                                currency={currency}
+                                currency={activeCurrency.code}
                                 transactions={incomeData} 
                                 onDownloadPDF={handleDownloadIncomeDetails}
                                 onDelete={(id) => setOpenDeleteAlert({ show: true, data: id })} 
@@ -115,9 +116,11 @@ export default function Income() {
                             title="Add Income"
                         >
                             <AddIncomeForm 
-                                incomeFormData={incomeFormData}
-                                setIncomeFormData={setIncomeFormData}
-                                onAddIncome={handleAddIncome} 
+                                data={incomeFormData}
+                                setData={setIncomeFormData}
+                                onAddIncome={handleAddIncome}
+                                errors={errors}
+                                setErrors={setErrors}
                             />
                         </Modal>
 

@@ -8,7 +8,7 @@ export default function RecentIncome({ currency, transactions, onSeeMore }) {
     return (
         <div className="card">
             <div className="flex items-center justify-between">
-                <h5 className="text-lg">Income</h5>
+                <h5 className="text-lg font-medium">Income</h5>
 
                 <button
                     onClick={onSeeMore}
@@ -20,7 +20,7 @@ export default function RecentIncome({ currency, transactions, onSeeMore }) {
 
             <div className="mt-6">
                 {transactions.length === 0 ? (
-                    <p className="text-sm text-gray-400 text-center font-[Comfortaa] font-medium">
+                    <p className="text-sm text-gray-400 text-center font-[Basic] font-medium">
                         No income transactions found.
                     </p>
                 ) : (

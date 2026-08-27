@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
 const bcrypt = require('bcryptjs');
+const currencyConfig = require('../config/currency.Config.js');
 
 const userSchema = new Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
         lowercase: true,
+        unique: true,
         trim: true
     },
 
@@ -34,15 +34,21 @@ const userSchema = new Schema({
     
     currency: {
         type: String,
-        enum: ["INR", "USD", "EUR"],
+        enum: Object.keys(currencyConfig),
         default: "INR"
     }
 }, { timestamps: true });
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
-    if (!this.isModified("password")) return;
-    this.password = await bcrypt.hash(this.password, 10);
+    try {
+        if (!this.isModified("password")) return;
+        this.password = await bcrypt.hash(this.password, 16);
+        
+    } catch (error) {
+        console.error(`Hash Error ~ ${error}`);
+        next(error);
+    }
 });
 
 // Compare passwords

@@ -1,12 +1,15 @@
-import DashboardLayout from "../../components/layouts/DashboardLayout";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../store/useAuthStore";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { ArrowLeft, Camera, Loader, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+
+import { validateProfile } from "../../errors/profile.error";
+import { useAuthStore } from "../../store/useAuthStore";
+import { hasErrors } from "../../errors/errors";
+
+import DashboardLayout from "../../components/layouts/DashboardLayout";
 import Input from "../../components/inputs/Input";
 import CharAvatar from "../../components/cards/CharAvatar";
-import { currencyConfig } from "../../config/currency.Config";
 import UpdateProfileSkeleton from "../../components/skeletons/UpdateProfileSkeleton";
 
 export default function UpdateProfile() {
@@ -14,14 +17,14 @@ export default function UpdateProfile() {
 
     const emptyProfile = {
         fullName: "",
-        dob: "",
-        currency: ""
+        dob: ""
     }
 
     const [profileData, setProfileData] = useState(emptyProfile);
+    const [errors, setErrors] = useState(emptyProfile);
     const [profilePic, setProfilePic] = useState(null);
     const [preview, setPreview] = useState("");
-    const [isImageRemoved, setIsImageRemoved] = useState(false);
+    const [profilePicRemoved, setProfilePicRemoved] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,7 +35,6 @@ export default function UpdateProfile() {
             dob: authUser.dob
                 ? new Date(authUser.dob).toISOString().split("T")[0]
                 : "",
-            currency: authUser.currencyDetails?.code || "INR",
         });
 
         if (authUser.profilePic) {
@@ -47,34 +49,46 @@ export default function UpdateProfile() {
             }
         };
     }, [preview]);
+
+    const handleChange = (field) => (e) => {
+        setProfileData(prev => ({ ...prev, [field]: e.target.value }));
+        setErrors(prev => ({ ...prev, [field]: "" }));
+    };
     
-    async function handleImageUpload(e) {
+    async function uploadProfilePic(e) {
         const file = e.target.files[0];
         if (!file) return;
+
+        const profilePicUrl = URL.createObjectURL(file);
         
         setProfilePic(file);
-        setPreview(URL.createObjectURL(file));
-        setIsImageRemoved(false);
-    }
+        setPreview(profilePicUrl);
+        setProfilePicRemoved(false);
+    };
     
-    function handleRemoveImage() {
+    function removeProfilePic() {
         setPreview("");
         setProfilePic(null);
-        setIsImageRemoved(true);
+        setProfilePicRemoved(true);
         toast.success("Profile picture will be removed successfully!");
-    }
+    };
 
-    async function handleSave() {
+    async function handleSave(e) {
+        e.preventDefault();
+
+        const newErrors = validateProfile({...profileData, profilePic});
+        if (hasErrors(newErrors)) return setErrors(newErrors);
+
         try {
-            let profilePicToSend = undefined;
+            let profilePicSend = undefined;
 
-            if (isImageRemoved) {
-                profilePicToSend = "";
+            if (profilePicRemoved) {
+                profilePicSend = "";
             } else if (profilePic) {
-                profilePicToSend = profilePic;
+                profilePicSend = profilePic;
             }
             
-            await updateProfile({ ...profileData, profilePic: profilePicToSend });
+            await updateProfile({ ...profileData, profilePic: profilePicSend });
             navigate("/profile");
             toast.success("Profile updated successfully!");
 
@@ -82,7 +96,7 @@ export default function UpdateProfile() {
             console.log(error);
             toast.error(error.response?.data?.message || "Failed to update profile");
         }
-    }
+    };
 
     return (
         <DashboardLayout activeMenu="Profile">
@@ -109,7 +123,7 @@ export default function UpdateProfile() {
                             {preview ? (
                                 <button 
                                     type="button"
-                                    onClick={handleRemoveImage}
+                                    onClick={removeProfilePic}
                                     className="absolute bottom-0 right-0 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 hover:scale-110 transition-all cursor-pointer"
                                     disabled={isUpdatingProfile}
                                 >
@@ -130,7 +144,7 @@ export default function UpdateProfile() {
                                         id="avatar-upload"
                                         accept="image/*"
                                         className="hidden"
-                                        onChange={handleImageUpload}
+                                        onChange={uploadProfilePic}
                                         disabled={isUpdatingProfile} 
                                     />
                                 </label>
@@ -140,38 +154,23 @@ export default function UpdateProfile() {
                         <div className="w-full space-y-4">
                             <Input 
                                 type="text"
-                                placeholder="Add your name"
-                                value={profileData.fullName}
                                 label="Full Name"
-                                onChange={(e) => setProfileData({ ...profileData, fullName: e.target.value })}
+                                value={profileData.fullName}
+                                placeholder="Add your name"
+                                onChange={handleChange("fullName")}
+                                error={errors.fullName}
                                 disabled={isUpdatingProfile}
                             />
 
                             <Input 
                                 type="date"
-                                placeholder="Add your dob"
-                                value={profileData.dob}
                                 label="Date of Birth"
-                                onChange={(e) => setProfileData({ ...profileData, dob: e.target.value })}
+                                value={profileData.dob}
+                                placeholder="Add your dob"
+                                onChange={handleChange("dob")}
+                                error={errors.dob}
                                 disabled={isUpdatingProfile}
                             />
-                            
-                            <label className="text-sm text-slate-800">Currency</label>
-                            <select 
-                                value={profileData.currency}
-                                onChange={(e) => setProfileData({ ...profileData, currency: e.target.value })}
-                                className="input-box"
-                                disabled={isUpdatingProfile}
-                            >
-                                {Object.values(currencyConfig).map((currency) => (
-                                    <option 
-                                        key={currency.code} 
-                                        value={currency.code}
-                                    >
-                                        {currency.symbol} {currency.code}
-                                    </option>
-                                ))}
-                            </select>
                         </div>
 
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-2">

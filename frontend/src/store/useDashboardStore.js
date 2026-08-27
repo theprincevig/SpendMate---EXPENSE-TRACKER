@@ -17,7 +17,6 @@ export const useDashboardStore = create((set) => ({
 
         } catch (error) {
             console.error(`Get dashboard error: ${error}`);
-            throw error;
 
         } finally {
             set({ loading: false });

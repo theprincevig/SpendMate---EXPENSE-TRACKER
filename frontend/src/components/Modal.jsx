@@ -1,14 +1,24 @@
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function Modal({ children, isOpen, onClose, title }) {
-    const [showModal, setShowModal] = useState(false);
+export default function Modal({
+    children,
+    isOpen,
+    onClose,
+    title
+}) {
+    const [showModal, setShowModal] = useState(isOpen);
 
     // Handle mount/unmount animation
     useEffect(() => {
-        if (isOpen) setShowModal(true);
-        else {
-            setTimeout(() => setShowModal(false), 300); // match animation duration
+        if (isOpen) {
+            setShowModal(true);
+        } else {
+            const timer = setTimeout(() => {
+                setShowModal(false);
+            }, 300);
+
+            return () => clearTimeout(timer);
         }
     }, [isOpen]);
 
@@ -16,17 +26,21 @@ export default function Modal({ children, isOpen, onClose, title }) {
 
     return (
         <div 
-            className="fixed inset-0 z-50 flex justify-center items-center bg-black/40 backdrop-blur-md transition-opacity duration-300"
-            style={{ opacity: isOpen ? 1 : 0 }}
+            onClick={onClose}
+            className={`
+                fixed inset-0 z-50 flex justify-center items-center 
+                bg-black/40 backdrop-blur-md transition-opacity duration-300 
+                ${isOpen ? "opacity-100" : "opacity-0"}
+            `}
         >
             <div className="relative w-full max-w-2xl p-4">
 
                 {/* Modal box */}
                 <div 
+                    onClick={(e) => e.stopPropagation()}
                     className={`
-                        bg-white rounded-xl shadow-md overflow-hidden
-                        transform transition-all duration-300 ease-out
-                        ${isOpen ? "scale-100 opacity-100" : "scale-75 opacity-0"}
+                        bg-white rounded-xl shadow-md overflow-hidden 
+                        ${isOpen ? "open-y" : "close-y"}
                     `}
                 >
 

@@ -1,7 +1,19 @@
 import { Bug, Trash2, TrendingDown, TrendingUp } from "lucide-react";
-import { formatAmount } from "../../lib/helper";
+import { useExchangeRateStore } from "../../store/useExchangeRateStore";
+import { formatPrice } from "../../utils/formatPrice";
 
-export default function TransactionsInfoCard({ title, icon, date, amount, type, currency, onDelete, hideDeleteBtn }) {
+export default function TransactionsInfoCard({
+    title,
+    icon,
+    date,
+    amount,
+    type,
+    currency,
+    onDelete,
+    hideDeleteBtn
+}) {
+    const { rates, isFetchingRates } = useExchangeRateStore();
+    
     function getAmountStyles() {
         return type === 'income' ? "bg-green-50 text-green-500" : "bg-red-50 text-red-500";
     }
@@ -22,7 +34,7 @@ export default function TransactionsInfoCard({ title, icon, date, amount, type, 
 
             <div className="flex-1 flex items-center justify-between">
                 <div className="">
-                    <p className="text-sm text-gray-700 font-medium font-[Comfortaa]">{title}</p>
+                    <p className="text-sm text-gray-700 font-medium font-[Basic]">{title}</p>
                     <p className="text-xs text-gray-400 mt-1">{date}</p>
                 </div>
 
@@ -44,7 +56,17 @@ export default function TransactionsInfoCard({ title, icon, date, amount, type, 
                     >
                         <h6 className="text-xs font-medium">
                             {type === 'income' ? "+" : "-"}
-                            {formatAmount(Math.abs(amount), currency)}
+                            {isFetchingRates && currency !== "INR" ? (
+                                <span className=" w-40 h-3 shimmer inline-block" />
+                            ) : (
+                                <>
+                                    {formatPrice({
+                                        amount,
+                                        userCurrency: currency,
+                                        rates
+                                    })}
+                                </>
+                            )}
                         </h6>
                         {type === 'income' ? <TrendingUp /> : <TrendingDown />}
                     </div>

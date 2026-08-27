@@ -2,13 +2,18 @@ import { Download } from "lucide-react";
 import TransactionsInfoCard from "../cards/TransactionsInfoCard";
 import moment from "moment";
 
-export default function IncomeList({ currency, transactions, onDownloadPDF, onDelete }) {
+export default function IncomeList({
+    currency,
+    transactions,
+    onDownloadPDF,
+    onDelete
+}) {
     if (!Array.isArray(transactions)) return null;
 
     return (
         <div className="card">
             <div className="flex items-center justify-between">
-                <h5 className="text-lg">Income Source</h5>
+                <h5 className="text-lg font-medium">Income Source</h5>
 
                 <button 
                     onClick={onDownloadPDF}

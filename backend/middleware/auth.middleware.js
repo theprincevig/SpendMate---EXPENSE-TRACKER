@@ -3,7 +3,13 @@ const User = require('../models/user');
 
 module.exports.protect = async (req, res, next) => {
     const token = req.cookies.jwt;
-    if (!token) return res.status(401).json({ success: false, message: "Not authorized, no token." });
+    // console.log(token);
+    if (!token) {
+        return res.status(401).json({
+            success: false,
+            message: "Not authorized, no token."
+        });
+    }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -14,4 +20,4 @@ module.exports.protect = async (req, res, next) => {
         console.error("JWT token error : ", error);
         return res.status(401).json({ success: false, message: "Invalid token." });
     }
-}
+};

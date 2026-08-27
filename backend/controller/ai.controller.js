@@ -1,7 +1,7 @@
 const Expense = require("../models/expense");
 const AiChat = require("../models/aiChat.js");
 const currencyConfig = require("../config/currency.Config.js");
-const { getAIResponse, getOverspendingWarning } = require("../utils/ai.service");
+const { getAIResponse, getOverspendingWarning } = require("../services/ai.service.js");
 const { analyzeOverspending } = require("../utils/overSpending.js");
 const { detectIntent } = require("../utils/intent.utils.js");
 const AiChatSession = require("../models/aiChatSession.js");
@@ -81,15 +81,19 @@ module.exports.chatWithAi = async (req, res) => {
 
     } catch (error) {
         console.error("AI Chat Error:", error);
-        
-        if (error.code === "insufficient_quota") {
-            return res.status(500).json({
+
+        if (error.message === "AI_QUOTA_EXCEEDED") {
+            return res.status(429).json({
                 success: false,
-                reply: "AI usage limit reached. Please try again later."
+                code: "AI_QUOTA_EXCEEDED",
+                reply: "You can't ask anything to AI Assistant right now. The AI usage limit has been exceeded."
             });
         }
 
-        res.status(500).json({ message: "AI service failed" });
+        return res.status(500).json({
+            success: false,
+            message: "AI service failed"
+        });
     }
 };
 
