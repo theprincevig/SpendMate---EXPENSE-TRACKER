@@ -103,7 +103,7 @@ export default function Signup() {
                         If Already have an Account?{" "}
                         <Link 
                             to="/login"
-                            className="font-[Comfortaa] font-medium text-primary underline hover:opacity-80 transition-all"
+                            className="font-[Basic] font-medium text-primary underline hover:opacity-80 transition-all"
                         >
                             Login
                         </Link>

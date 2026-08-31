@@ -86,7 +86,7 @@ export default function Login() {
                         Don't have an Account?{" "}
                         <Link 
                             to="/signup"
-                            className="font-[Comfortaa] font-medium text-primary underline hover:opacity-80 transition-all"
+                            className="font-[Basic] font-medium text-primary underline hover:opacity-80 transition-all"
                         >
                             Signup
                         </Link>
